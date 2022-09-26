@@ -9,7 +9,6 @@ const userRoutes = require('./routes/UserRoutes');
 const { initializeApp } = require('firebase/app');
 const { getFirestore } = require('firebase/firestore');
 
-
 /*----------------------------------- Firebase config ------------------------------------------*/
 const firebaseConfig = {
   apiKey: "AIzaSyBx5tthRrnsBWbmEKdpDOqao-oTZAa851w",
@@ -21,7 +20,6 @@ const firebaseConfig = {
 };
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
-
 
 /*----------------------------------- Server config ------------------------------------------*/
 const app = express();

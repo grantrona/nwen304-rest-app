@@ -6,7 +6,7 @@ const googleProvider = new GoogleAuthProvider();
 const auth = require('firebase/auth');
 
 // Based on code from Firebase demos 
-router.post('/login',(req,res) => {
+router.post('/login/email',(req,res) => {
     // Sign In with firebase function
     auth.signInWithEmailAndPassword(req.body.email, req.body.password)
     .then(user => {
@@ -19,7 +19,7 @@ router.post('/login',(req,res) => {
                 // Set cookie policy for session cookie.
                 const options = { maxAge: expiresIn, httpOnly: true, secure: true };
                 res.cookie('session', sessionCookie, options);
-                res.end(JSON.stringify({ status: 'success' }));
+                res.render('home')
               },
               (error) => {
                 res.status(401).send('Unauthorized request');
@@ -32,7 +32,29 @@ router.post('/login',(req,res) => {
 });
 
 router.post('/signup',(req,res) => {
-    
+    auth.createUserWithEmailAndPassword(req.body.email, req.body.password)
+    .then(user => {
+        user.getIdToken().then( idToken => {
+            const expiresIn = 60 * 60 * 24 * 5 * 1000;
+            getAuth()
+            .createSessionCookie(idToken, { expiresIn })
+            .then(
+              (sessionCookie) => {
+                // Set cookie policy for session cookie.
+                const options = { maxAge: expiresIn, httpOnly: true, secure: true };
+                res.cookie('session', sessionCookie, options);
+                res.render('home')
+              },
+              (error) => {
+                res.status(401).send('Unauthorized request');
+              }
+            );
+        })
+        .catch(res.status(500).send('Internal Server Error'));
+    })
+    .catch((error) => {
+        res.status(400).send(error.message);
+    })
 });
 
 router.post('/logout',(req,res) => {
@@ -50,6 +72,10 @@ router.post('/logout',(req,res) => {
             res.redirect('/');
         });
 
+});
+
+router.post('/login/google', (req, res) => {
+    
 });
 
 module.exports = router;
