@@ -1,5 +1,5 @@
 const express = require('express');
-const login = require('./routes/login');
+// const login = require('./routes/login');
 const router = express.Router();
 const db = require('../index');
 const { GoogleAuthProvider } = require('firebase/auth');
