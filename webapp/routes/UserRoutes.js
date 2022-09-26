@@ -11,7 +11,17 @@ router.use('/pages/signup', (req, res) => {
     res.render('signupPage');
 });
 
-// Any http request will be handled by rendering index.ejs:
+// TODO: add new post to database
+router.post('/addPost/add', (req, res) =>{
+    console.log("Post add attempt");
+    res.redirect('/');
+})
+
+router.get('/addPost', (req, res) =>{
+    res.render('add-post');
+})
+
+
 router.use('/', (req, res) => {
     //Render index.ejs, passing the variable 'ExampleVariable'
     res.render('index', {'ExampleVariable' : 'wow'})
