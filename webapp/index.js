@@ -1,6 +1,6 @@
 const http = require('http');
 const express = require('express');
-const auth = require('./routes/auth');
+const auth = require('./routes/AuthRoute');
 const cookieParser = require('cookie-parser')
 const cors = require('cors');
 require('firebase/app');
