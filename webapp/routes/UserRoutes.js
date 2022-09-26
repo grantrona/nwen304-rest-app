@@ -7,4 +7,14 @@ router.use('/', (req, res) => {
     res.render('index', {'ExampleVariable' : 'wow'})
 });
 
+// Direct user to login page
+router.use('/pages/login', (req, res) => {
+    res.render('loginPage');
+});
+
+// Direct user to sign up page
+router.use('/pages/signup', (req, res) => {
+    res.render('signupPage');
+});
+
 module.exports=router
