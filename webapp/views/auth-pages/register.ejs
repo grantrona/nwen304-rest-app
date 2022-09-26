@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Sign up</title>
-        <link rel="stylesheet" href="style.css">
+        <title>Sign Up</title>
+        <link rel="stylesheet" href="../style.css">
     </head>
 
     <body>
         <main>
-            <h1>Sign up Page</h1>
-            <p>We need a form of some sort here for registering</p>
+            <h1>Sign Up</h1>
+            <form id="signForm">
+                <div>
+                    <label for="emailInput">Email address</label>
+                    <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+                <div >
+                    <label for="passwordInput">Password</label>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                </div>
+                <div >
+                    <label for="passwordConfInput">Confirm Password</label>
+                    <input type="password" class="form-control" id="passwordConfInput" placeholder="Password">
+                </div>
+                <button type="submit" class="btn-block btn-primary">Sign In</button>
+            </form>
         </main>
     </body>
+    <script src="../controllers/signup.js"></script>
 </html>

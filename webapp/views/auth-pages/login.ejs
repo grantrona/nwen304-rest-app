@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Login</title>
-        <link rel="stylesheet" href="style.css">
+        <title>Log In</title>
+        <link rel="stylesheet" href="../style.css">
     </head>
 
     <body>
         <main>
-            <h1>Login Page</h1>
-            <p>We need a form of some sort here for logging in</p>
+            <h1>Log In</h1>
+            <form id="loginForm">
+                <div>
+                    <label for="emailInput">Email address</label>
+                    <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+                <div >
+                    <label for="passwordInput">Password</label>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                </div>
+                <button type="submit" class="btn-block btn-primary">Sign In</button>
+            </form>
         </main>
+        <script src="../controllers/login.js"></script>
     </body>
 </html>

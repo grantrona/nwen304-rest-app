@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 // Direct user to login page
-router.use('/pages/login', (req, res) => {
-    res.render('loginPage');
+router.use('/login', (req, res) => {
+    res.render('auth-pages/login');
 });
 
 // Direct user to sign up page
-router.use('/pages/signup', (req, res) => {
-    res.render('signupPage');
+router.use('/signup', (req, res) => {
+    res.render('auth-pages/register');
 });
 
 // TODO: add new post to database
