@@ -11,12 +11,19 @@ router.use('/signup', (req, res) => {
     res.render('auth-pages/register');
 });
 
+// Add Post
 // TODO: add new post to database
-router.post('/addPost/add', (req, res) =>{
+router.post('/addPost', (req, res) =>{
     console.log("Post add attempt");
+
+    const postTitle = req.body.pTitle;
+    const postContent = req.body.pContent;
+
+    console.log("Title: ", postTitle, " Content: ", postContent);
     res.redirect('/');
 })
 
+// Navigate to add post html file
 router.get('/addPost', (req, res) =>{
     res.render('add-post');
 })

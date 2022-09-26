@@ -8,6 +8,7 @@ const path = require('path');
 const userRoutes = require('./routes/UserRoutes');
 const { initializeApp } = require('firebase/app');
 const { getFirestore } = require('firebase/firestore');
+const bodyParser = require('body-parser');
 
 /*----------------------------------- Firebase config ------------------------------------------*/
 const firebaseConfig = {
@@ -28,7 +29,8 @@ app.set("view engine", 'ejs');
 app.set('views', 'views'); // point to 'views' folder
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: false})); // allows accessing request body
 // specify static files and routes to use:
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(userRoutes);
