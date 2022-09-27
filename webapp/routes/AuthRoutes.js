@@ -23,9 +23,9 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
-
-function checkToken(req, res) {
-  let cookie = req.cookie['session'] || '';
+// Middleware checks token is valid before continuing with request
+function checkToken(req, res, next) {
+  let cookie = req.cookies['session'] || '';
   jwt.verify(cookie, secret_key, (err, data)=>{
     if (err) res.sendStatus(400);
     else next();
@@ -68,7 +68,7 @@ router.post('/signup/google', (req, res) => {
 });
 
 router.post('/logout',(req,res) => {
-    const sessionCookie = req.cookies.session || '';
+    const sessionCookie = req.cookies['session'] || '';
     res.clearCookie('session');
     getAuth()
         .verifySessionCookie(sessionCookie)
@@ -84,6 +84,7 @@ router.post('/logout',(req,res) => {
 
 });
 
+// Middleware added to anything in /protected route
 router.use('/protected', checkToken);
 
 
