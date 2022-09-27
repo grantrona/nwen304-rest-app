@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 
 // Direct user to login page
 router.use('/login', (req, res) => {
@@ -25,7 +26,7 @@ router.post('/addPost', (req, res) =>{
 
 // Navigate to add post html file
 router.get('/addPost', (req, res) =>{
-    res.render('add-post');
+    res.sendFile(path.join(__dirname, '..', 'public', 'add-post.html'));
 })
 
 
