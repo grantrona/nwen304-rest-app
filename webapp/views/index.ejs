@@ -27,6 +27,13 @@
             </header>
             <h1>Index Page</h1>
             <p>Hello there!</p>
+            <ul id="postList">
+                <%posts.map((post) => {%>
+                    <li>
+                        <%= post.title %>
+                    </li>
+                <%})%>
+            </ul>
         </main>
     </body>
 </html>

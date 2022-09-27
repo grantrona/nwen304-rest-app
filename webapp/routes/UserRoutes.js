@@ -30,8 +30,17 @@ router.get('/addPost', (req, res) =>{
 
 
 router.use('/', (req, res) => {
-    //Render index.ejs, passing the variable 'ExampleVariable'
-    res.render('index', {'ExampleVariable' : 'wow'})
+    const posts = [
+        {
+            title: "testTitle",
+            content: "testContent"
+        },
+        {
+            title: "Another title",
+            content: "Another Content"
+        }
+    ]; // TODO: get list of posts from database.
+    res.render('index', {posts : posts})
 });
 
 module.exports=router
