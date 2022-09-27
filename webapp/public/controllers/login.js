@@ -7,7 +7,6 @@ loginForm.addEventListener('submit', (e) => {
         alert('Fill in all the fields');
         return;
     }
-    console.log("here");
     fetch("/login/email", {
         method: 'POST',
         headers: {

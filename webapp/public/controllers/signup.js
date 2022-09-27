@@ -12,7 +12,6 @@ loginForm.addEventListener('submit', (e) => {
         alert('Passwords do not match.')
         return;
     }
-    console.log("here");
     fetch("/signup/email", {
         method: 'POST',
         headers: {
