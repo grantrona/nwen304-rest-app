@@ -8,15 +8,16 @@
     <body>
         <main>
             <h1>Add Post</h1>
-            <form action="/addPost", method="POST">
+            <form action="/addPost", method="POST", id="addPostForm">
                 <label for="postTitle">Enter Title</label>
-                <input type="text" name="pTitle">
+                <input type="text" id="pTitle">
 
                 <label for="postContent">Enter Post</label>
-                <input type="text" name="pContent">
+                <input type="text" id="pContent">
 
                 <button type="submit">Add Post</button>
             </form>
         </main>
+        <script src="./controllers/add-post.js"></script>
     </body>
 </html>
