@@ -29,8 +29,9 @@
             <p>Hello there!</p>
             <ul id="postList">
                 <%posts.map((post) => {%>
-                    <li>
-                        <%= post.title %>
+                    <li class="postListItem">
+                        <h3 class="postTitle"><%= post.title %></h3>
+                        <p class="postContent"><%= post.content %></p>
                     </li>
                 <%})%>
             </ul>
