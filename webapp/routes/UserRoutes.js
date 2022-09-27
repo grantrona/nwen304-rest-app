@@ -4,12 +4,12 @@ const path = require('path');
 
 // Direct user to login page
 router.use('/login', (req, res) => {
-    res.render('auth-pages/login');
+    res.sendFile(path.join(__dirname, '..', 'public', 'login.html'));
 });
 
 // Direct user to sign up page
 router.use('/signup', (req, res) => {
-    res.render('auth-pages/register');
+    res.sendFile(path.join(__dirname, '..', 'public', 'register.html'));
 });
 
 // Add Post

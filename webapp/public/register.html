@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Index Page</title>
+        <title>Sign Up</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
 
@@ -39,16 +39,23 @@
                       </div>
                 </nav>
             </header>
-            <h1>Index Page</h1>
-            <p>Hello there!</p>
-            <ul id="postList">
-                <%posts.map((post) => {%>
-                    <li class="postListItem">
-                        <h3 class="postTitle"><%= post.title %></h3>
-                        <p class="postContent"><%= post.content %></p>
-                    </li>
-                <%})%>
-            </ul>
+            <h1>Sign Up</h1>
+            <form id="signForm">
+                <div>
+                    <label for="emailInput">Email address</label>
+                    <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+                <div >
+                    <label for="passwordInput">Password</label>
+                    <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                </div>
+                <div >
+                    <label for="passwordConfInput">Confirm Password</label>
+                    <input type="password" class="form-control" id="passwordConfInput" placeholder="Password">
+                </div>
+                <button type="submit" class="btn-block btn-primary">Sign In</button>
+            </form>
         </main>
     </body>
+    <script src="./controllers/signup.js"></script>
 </html>
