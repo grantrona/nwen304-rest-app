@@ -13,8 +13,8 @@ loginForm.addEventListener('submit', (e) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            title: title,
-            content: content
+            title,
+            content
         }),
     })
     .then(() => {

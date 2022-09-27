@@ -17,8 +17,8 @@ router.use('/signup', (req, res) => {
 router.post('/addPost', (req, res) =>{
     console.log("Post add attempt");
 
-    const postTitle = req.body.pTitle;
-    const postContent = req.body.pContent;
+    const postTitle = req.body.title;
+    const postContent = req.body.content;
 
     console.log("Title: ", postTitle, " Content: ", postContent);
     res.redirect('/');
