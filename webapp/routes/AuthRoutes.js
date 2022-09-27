@@ -25,7 +25,7 @@ const auth = getAuth(firebaseApp);
 
 
 function checkToken(req, res) {
-  let cookie = req.cookie.session || '';
+  let cookie = req.cookie['session'] || '';
   jwt.verify(cookie, secret_key, (err, data)=>{
     if (err) res.sendStatus(400);
     else next();

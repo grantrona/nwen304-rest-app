@@ -12,18 +12,6 @@ router.use('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'register.html'));
 });
 
-// Add Post
-// TODO: add new post to database
-router.post('/addPost', (req, res) =>{
-    console.log("Post add attempt");
-
-    const postTitle = req.body.title;
-    const postContent = req.body.content;
-
-    console.log("Title: ", postTitle, " Content: ", postContent);
-    res.redirect('/');
-})
-
 // Navigate to add post html file
 router.get('/addPost', (req, res) =>{
     res.sendFile(path.join(__dirname, '..', 'public', 'add-post.html'));

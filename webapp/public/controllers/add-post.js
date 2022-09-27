@@ -7,7 +7,7 @@ loginForm.addEventListener('submit', (e) => {
         alert('Fill in all the fields');
         return;
     }
-    fetch("/addPost", {
+    fetch("/protected/addPost", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
