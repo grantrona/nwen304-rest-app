@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } = require('firebase/auth');
+const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential } = require('firebase/auth');
 const googleProvider = new GoogleAuthProvider();
-// const {auth, secret_key} = require('../index');
 const jwt = require('jsonwebtoken');
 const secret_key = process.env.SECRET_KEY || 'secret_key';
 const { initializeApp } = require('firebase/app');
@@ -46,13 +45,20 @@ router.post('/login/email',(req,res) => {
 });
 
 router.post('/login/google', (req, res) => {
-
+  const idToken = req.body.idToken; 
+  const credential = GoogleAuthProvider.credential(idToken);
+  signInWithCredential(auth, credential)
+  .then(userCredentials => {
+    let uidToken = {id: userCredentials.user.uid};
+    let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
+    res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
+    res.render('index');
+  })
 });
 
 router.post('/signup/email',(req,res) => {
   createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
   .then(userCredentials => {
-    console.log('DILI YOU ARE HERE');
     let uidToken = {id: userCredentials.user.uid};
     let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
     res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
@@ -63,9 +69,6 @@ router.post('/signup/email',(req,res) => {
   })
 });
 
-router.post('/signup/google', (req, res) => {
-  
-});
 
 router.post('/logout',(req,res) => {
     const sessionCookie = req.cookies['session'] || '';
