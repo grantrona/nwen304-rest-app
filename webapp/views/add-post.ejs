@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Add Post</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    </head>
+
+    <body>
+        <header>
+            <%- include('partials/navbar', {isAuth: isAuth}); %>
+        </header>
+        <main>
+            <h1>Add Post</h1>
+            <form id="addPostForm">
+                <label for="postTitle">Enter Title</label>
+                <input type="text" id="pTitle">
+
+                <label for="postContent">Enter Post</label>
+                <input type="text" id="pContent">
+
+                <button type="submit">Add Post</button>
+            </form>
+        </main>
+        <script src="../public/controllers/add-post.js"></script>
+    </body>
+</html>
