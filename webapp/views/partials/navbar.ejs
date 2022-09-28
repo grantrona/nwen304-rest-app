@@ -10,17 +10,27 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav" id="navList">
+            <!--If logged in show add post functionality-->
             <% if (isAuth) {%>
             <li class="navItem">
                 <a href="/addPost">Add Post</a>
             </li>
             <% } %>
+            <!--If logged in, hide sign up and login buttons-->
+            <% if (!isAuth) {%>
             <li class="navItem" style="float: right">
                 <a href="/signup">Sign Up</a>
             </li>
             <li class="navItem" style="float: right">
                 <a href="/login">Log In</a>
             </li>
+            <% } %>
+            <!--If logged in show sign out button-->
+            <% if (isAuth) {%>
+            <li class="navItem">
+                <a href="/signout">Sign Out</a>
+            </li>
+            <% } %>
         </ul>
         <!-- <form class="navbar-form navbar-left">
           <div class="form-group">

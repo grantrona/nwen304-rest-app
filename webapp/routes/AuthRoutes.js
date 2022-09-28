@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential } = require('firebase/auth');
+const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential, signOut } = require('firebase/auth');
 const jwt = require('jsonwebtoken');
-const {auth} = require('../utils/firebaseConfig');
+const {auth, secret_key} = require('../utils/firebaseConfig');
 
 // Middleware checks token is valid before continuing with request
 function checkToken(req, res, next) {
@@ -21,7 +21,7 @@ router.post('/login/email',(req,res) => {
     let uidToken = {id: userCredentials.user.uid};
     let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
     res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-    res.render('index');
+    res.sendStatus(200);
   })
   .catch(res.status(400).send('Incorrect Details'))
 });
@@ -34,7 +34,8 @@ router.post('/login/google', (req, res) => {
     let uidToken = {id: userCredentials.user.uid};
     let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
     res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-    res.render('index');
+    console.log(auth.currentUser.displayName);
+    res.sendStatus(200);
   })
 });
 
@@ -44,7 +45,7 @@ router.post('/signup/email',(req,res) => {
     let uidToken = {id: userCredentials.user.uid};
     let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
     res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-    res.render('index');
+    res.sendStatus(200);
   })
   .catch((error) => {
       res.status(400).send(error.message);
@@ -52,21 +53,11 @@ router.post('/signup/email',(req,res) => {
 });
 
 
-router.post('/logout',(req,res) => {
-    const sessionCookie = req.cookies['session'] || '';
-    res.clearCookie('session');
-    getAuth()
-        .verifySessionCookie(sessionCookie)
-        .then((decodedClaims) => {
-            return getAuth().revokeRefreshTokens(decodedClaims.sub);
-        })
-        .then(() => {
-            res.redirect('/');
-        })
-        .catch((error) => {
-            res.redirect('/');
-        });
-
+router.get('/signout',(req,res) => {
+  console.log('signing out');
+  signOut(auth);
+  res.clearCookie('session', {httpOnly: true, sameSite: true});
+  res.redirect('/');
 });
 
 // Middleware added to anything in /protected route

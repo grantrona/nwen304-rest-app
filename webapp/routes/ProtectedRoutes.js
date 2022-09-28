@@ -1,16 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../index');
+const {db, auth, secret_key} = require('../utils/firebaseConfig');
+const Post = require('../models/Post');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
+const { addDoc, collection } = require('firebase/firestore');
 
 // Add Post
 // TODO: add new post to database
 router.post('/protected/addPost', (req, res) =>{
-    console.log("Post add attempt");
-
-    const postTitle = req.body.title;
-    const postContent = req.body.content;
-
-    console.log("Title: ", postTitle, " Content: ", postContent);
+    let timestamp = moment().format('MM/DD/YY hh:mm:ss A');
+    let creatorID = jwt.decode(req.cookies['session'], secret_key).id;
+    let newPost = new Post(req.body.title, req.body.content, timestamp, creatorID);
+    addDoc(collection(db, 'posts'), {...newPost});
     res.redirect('/');
 }); 
 

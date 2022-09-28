@@ -17,7 +17,4 @@ loginForm.addEventListener('submit', (e) => {
             password
         }),
     })
-    .then(() => {
-        console.log('sent request');
-    })
 })
