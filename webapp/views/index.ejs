@@ -20,9 +20,11 @@
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav" id="navList">
+                            <% if (isAuth) {%>
                             <li class="navItem">
                                 <a href="/addPost">Add Post</a>
                             </li>
+                            <% } %>
                             <li class="navItem" style="float: right">
                                 <a href="/signup">Sign Up</a>
                             </li>

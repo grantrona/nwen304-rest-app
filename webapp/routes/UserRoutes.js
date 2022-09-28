@@ -29,7 +29,7 @@ router.use('/', (req, res) => {
             content: "Another Content"
         }
     ]; // TODO: get list of posts from database.
-    res.render('index', {posts : posts})
+    res.render('index', {posts : posts, isAuth: false})
 });
 
 module.exports=router
