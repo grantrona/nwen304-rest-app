@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { db } = require('../utils/firebaseConfig');
-const { doc, getDocs, collection, getDoc } = require('firebase/firestore');
+const { getDocs, collection} = require('firebase/firestore');
+const moment = require('moment');
 
 // Direct user to login page
 router.use('/login', (req, res) => {
@@ -30,7 +31,14 @@ async function getPosts(){
 
 router.use('/', (req, res) => {
     const isAuth = req.cookies['session']? true: false;
+    const timeStampFormat = 'MM/DD/YY hh:mm:ss A';
     getPosts().then((posts)=> {
+        posts.sort((a, b) => {
+            const aMoment = new moment(a.date, timeStampFormat);
+            const bMoment = new moment(b.date, timeStampFormat);
+            return bMoment.diff(aMoment);
+        });
+
         res.render('index', {posts : posts, isAuth: isAuth})
     });
 });
