@@ -17,7 +17,7 @@
     <body style="background-color: #222831; padding-top: 51px;">
         <main>
             <header>
-                <%- include('partials/navbar', {isAuth: isAuth}); %>
+                <%- include('partials/navbar', {isAuth: isAuth, creatorID, creatorID}); %>
             </header>
             <div class="container-fluid">
                 <div id="header" class="jumbotron text-center" style="background-color: #222831;">
@@ -31,6 +31,7 @@
                                 <div id="postContent col">
                                     <h3 class="postTitle text-center"><%= post.title %></h3>
                                     <p class="postContent text-center"><%= post.content %></p>
+                                    <a href="/userPosts?creatorID=<%= post.creatorID %>">View Author</a>
                                 </div>
                             </li>
                         <%})%>

@@ -1,8 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential, signOut } = require('firebase/auth');
+const authRoutes = express.Router();
+const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential, signOut, updateProfile } = require('firebase/auth');
+const { getDoc, setDoc, doc } = require('firebase/firestore');
 const jwt = require('jsonwebtoken');
-const {auth, secret_key} = require('../utils/firebaseConfig');
+const {db, auth, secret_key} = require('../utils/firebaseConfig');
 
 // Middleware checks token is valid before continuing with request
 function checkToken(req, res, next) {
@@ -14,7 +15,7 @@ function checkToken(req, res, next) {
 } 
 
 // Based on code from Firebase demos 
-router.post('/login/email',(req,res) => {
+authRoutes.post('/login/email',(req,res) => {
   // Sign In with firebase function
   signInWithEmailAndPassword(auth, req.body.email, req.body.password)
   .then(userCredentials => {
@@ -24,28 +25,43 @@ router.post('/login/email',(req,res) => {
     res.sendStatus(200);
   })
   .catch(res.status(400).send('Incorrect Details'))
+
 });
 
-router.post('/login/google', (req, res) => {
+authRoutes.post('/login/google', (req, res) => {
   const idToken = req.body.idToken; 
   const credential = GoogleAuthProvider.credential(idToken);
   signInWithCredential(auth, credential)
   .then(userCredentials => {
     let uidToken = {id: userCredentials.user.uid};
     let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
-    res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-    console.log(auth.currentUser.displayName);
-    res.sendStatus(200);
+    getDoc(doc(db,'users',userCredentials.user.uid))
+    .then(docSnapshot => {
+      if (!docSnapshot.exists()){
+        setDoc(doc(db,'users',userCredentials.user.uid), {displayName: userCredentials.user.displayName})
+        .then(()=>{
+          res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
+          res.sendStatus(200);
+        });
+      } else {
+        res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
+        res.sendStatus(200);
+      }
+    })
   })
 });
 
-router.post('/signup/email',(req,res) => {
+authRoutes.post('/signup/email',(req,res) => {
   createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
   .then(userCredentials => {
     let uidToken = {id: userCredentials.user.uid};
     let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
-    res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-    res.sendStatus(200);
+    updateProfile(userCredentials.user, {displayName: req.body.displayName});
+    setDoc(doc(db,'users',userCredentials.user.uid), {displayName: req.body.displayName})
+    .then(()=>{
+      res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
+      res.sendStatus(200);
+    });
   })
   .catch((error) => {
       res.status(400).send(error.message);
@@ -53,15 +69,16 @@ router.post('/signup/email',(req,res) => {
 });
 
 
-router.get('/signout',(req,res) => {
-  console.log('signing out');
-  signOut(auth);
-  res.clearCookie('session', {httpOnly: true, sameSite: true});
-  res.redirect('/');
+authRoutes.get('/signout',(req,res) => {
+  signOut(auth)
+  .then(()=>{
+    res.clearCookie('session', {httpOnly: true, sameSite: true});
+    res.redirect('/');
+  })
 });
 
 // Middleware added to anything in /protected route
-router.use('/protected', checkToken);
+authRoutes.use('/protected', checkToken);
 
 
-module.exports = router;
+module.exports = {authRoutes};

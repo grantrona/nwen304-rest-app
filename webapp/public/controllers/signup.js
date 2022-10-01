@@ -4,7 +4,8 @@ loginForm.addEventListener('submit', (e) => {
     const email = document.getElementById('emailInput').value;
     const password = document.getElementById('passwordInput').value;
     const passwordConf = document.getElementById('passwordConfInput').value;
-    if (email.trim() === '' || password.trim() === '' || passwordConf.trim() === '') {
+    const displayName = document.getElementById('displayName').value;
+    if (email.trim() === '' || displayName.trim() === '' || password.trim() === '' || passwordConf.trim() === '') {
         alert('Fill in all the fields');
         return;
     }
@@ -19,7 +20,8 @@ loginForm.addEventListener('submit', (e) => {
         },
         body: JSON.stringify({
             email,
-            password
+            password,
+            displayName,
         }),
     })
     .then(() => {

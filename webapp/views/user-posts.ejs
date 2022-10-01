@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>User Posts</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    </head>
+
+    <body>
+        <main>
+            <header>
+                <%- include('partials/navbar', {isAuth: isAuth, creatorID: creatorID, displayName: displayName}); %>
+            </header>
+            <h1>Posts By <%= displayName %></h1>
+            <ul id="postList">
+                <%posts.map((post) => {%>
+                    <li class="postListItem">
+                        <h3 class="postTitle"><%= post.title %></h3>
+                        <h4 class="postContent"><%= post.content %></h4>
+                        <p class="postContent"><%= post.date %></p>
+                    </li>
+                <%})%>
+            </ul>
+        </main>
+    </body>
+</html>

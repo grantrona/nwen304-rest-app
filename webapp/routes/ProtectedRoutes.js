@@ -16,4 +16,8 @@ router.post('/protected/addPost', (req, res) =>{
     res.redirect('/');
 }); 
 
+router.get('/protected/myposts', (req, res) => {
+
+});
+
 module.exports = router;
