@@ -1,0 +1,2 @@
+# Prevent dockerfile from copying node_modules folder
+node_modules
