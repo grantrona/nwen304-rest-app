@@ -8,7 +8,7 @@
     <body>
         <main>
             <header>
-                <%- include('partials/navbar', {isAuth: isAuth, creatorID: creatorID, displayName: displayName}); %>
+                <%- include('partials/navbar', {isAuth: isAuth}); %>
             </header>
             <h1>Posts By <%= displayName %></h1>
             <ul id="postList">
