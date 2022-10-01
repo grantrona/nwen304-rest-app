@@ -24,7 +24,9 @@ authRoutes.post('/login/email',(req,res) => {
     res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
     res.sendStatus(200);
   })
-  .catch(res.status(400).send('Incorrect Details'))
+  .catch(err=> {
+    res.status(400).send(err.message)
+  })
 
 });
 
@@ -81,4 +83,4 @@ authRoutes.get('/signout',(req,res) => {
 authRoutes.use('/protected', checkToken);
 
 
-module.exports = {authRoutes};
+module.exports = authRoutes;

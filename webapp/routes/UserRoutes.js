@@ -6,12 +6,12 @@ const moment = require('moment');
 
 // Direct user to login page
 router.use('/login', (req, res) => {
-    res.render('login', {isAuth: req.cookies['session']? true: false})
+    res.render('login', {isAuth: false})
 });
 
 // Direct user to sign up page
 router.use('/signup', (req, res) => {
-    res.render('register', {isAuth: req.cookies['session']? true: false})
+    res.render('register', {isAuth: false})
 });
 
 // Navigate to add post html file
