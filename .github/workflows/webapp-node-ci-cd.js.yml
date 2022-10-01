@@ -39,6 +39,7 @@ jobs:
       name: Build and push
       uses: docker/build-push-action@v3
       with:
+        context: /webapp
         push: true
         tags: ronaldo2598/chirper-webapp:latest
 
