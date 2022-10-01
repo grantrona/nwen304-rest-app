@@ -17,4 +17,9 @@ loginForm.addEventListener('submit', (e) => {
             password
         }),
     })
+    .then((response) => {
+        if (response.status == 200){
+            window.location.href = '/';
+        }
+    })
 })

@@ -24,7 +24,9 @@ loginForm.addEventListener('submit', (e) => {
             displayName,
         }),
     })
-    .then(() => {
-        console.log('sent request');
+    .then((response) => {
+        if (response.status == 200){
+            window.location.href = '/';
+        }
     })
 })
