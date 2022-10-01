@@ -5,26 +5,28 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
 
-    <body>
+    <body style="background-color: #222831; padding-top: 51px;">
         <script src="https://accounts.google.com/gsi/client" async defer></script>
         <main>
-            <header>
-                <%- include('partials/navbar', {isAuth: isAuth}); %>
-            </header>
-            <h1>Log In</h1>
-            <form id="loginForm">
-                <div>
-                    <label for="emailInput">Email address</label>
-                    <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
-                </div>
-                <div >
-                    <label for="passwordInput">Password</label>
-                    <input type="password" class="form-control" id="passwordInput" placeholder="Password">
-                </div>
-                <button type="submit" class="btn-block btn-primary">Sign In</button>
-            </form>
+            <div class="container">
+                <header>
+                    <%- include('partials/navbar', {isAuth: isAuth}); %>
+                </header>
+                <h1 style="color: #EEEEEE">Log In</h1>
+                <form id="loginForm" class="container" style="background-color: #EEEEEE; border-radius: 10px;  padding-bottom: 10px; padding-top: 5px; border-radius: 10px;">
+                    <div>
+                        <label for="emailInput">Email address</label>
+                        <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
+                    </div>
+                    <div >
+                        <label for="passwordInput">Password</label>
+                        <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn-block btn-primary" style="margin-top: 10px; width: 25%; margin-left: auto;
+                    margin-right: auto; border-radius: 10px;">Sign In</button>
+                    <div id="buttonDiv" style="margin-top: 2px; width: 25%; margin-left: auto; margin-right: auto;"></div>
+                </form>
             <!-- From Google and Firebase demo code -->
-            <div id="buttonDiv"></div>
             <script>
                 function handleCredentialResponse(response) {
                     fetch("/login/google", {
@@ -49,6 +51,7 @@
                     google.accounts.id.prompt();
                 }
             </script>
+            </div>
         </main> 
     </body>
     <script src="./controllers/login.js"></script>

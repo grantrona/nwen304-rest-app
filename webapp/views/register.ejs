@@ -5,13 +5,14 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
 
-    <body>
+    <body style="background-color: #222831; padding-top: 51px;">
         <main>
+            <div class="container">
             <header>
                 <%- include('partials/navbar', {isAuth: isAuth}); %>
             </header>
-            <h1>Sign Up</h1>
-            <form id="signupForm">
+            <h1 style="color: #EEEEEE">Sign Up</h1>
+            <form id="signupForm" class="container" style="background-color: #EEEEEE; border-radius: 10px;  padding-bottom: 10px; padding-top: 5px; border-radius: 10px;">
                 <div>
                     <label for="emailInput">Email address</label>
                     <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" placeholder="Enter email">
@@ -24,8 +25,10 @@
                     <label for="passwordConfInput">Confirm Password</label>
                     <input type="password" class="form-control" id="passwordConfInput" placeholder="Password">
                 </div>
-                <button type="submit" class="btn-block btn-primary">Sign In</button>
+                <button type="submit" class="btn-block btn-primary" style="margin-top: 10px; width: 25%; margin-left: auto;
+                margin-right: auto; border-radius: 10px;">Sign In</button>
             </form>
+         </div>
         </main>
     </body>
     <script src="./controllers/signup.js"></script>
