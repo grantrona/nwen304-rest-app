@@ -1,12 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>My Posts</title>
+        <title>User Posts</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
 
     <body>
         <main>
+            <script>
+                function editPost(postID, creatorID){
+                    let title = document.getElementById("title"+postID).value;
+                    let content = document.getElementById("content"+postID).value
+                    console.log(title, content, postID, creatorID);
+                    fetch("/protected/editPost", {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            title, 
+                            content, 
+                            postID, 
+                            creatorID,
+                        }),
+                    })
+                    .then(() => {window.location.reload()});
+                }
+
+                function deletePost(postID) {
+                    fetch("/protected/deletePost", {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            postID,
+                        }),
+                    })
+                    .then(() => {window.location.reload()});
+                }
+            </script>
             <header>
                 <%- include('partials/navbar', {isAuth: isAuth}); %>
             </header>
@@ -14,13 +47,19 @@
             <ul id="postList">
                 <%posts.map((post) => {%>
                     <li class="postListItem">
-                        <h3 class="postTitle"><%= post.title %></h3>
-                        <h4 class="postContent"><%= post.content %></h4>
-                        <p class="postContent"><%= post.date %></p>
-
+                        <div>
+                            <label for="postTitle">Post Title</label>
+                            <input type="text" class="form-control" id="title<%= post.id%>" value="<%= post.title%>" placeholder="<%= post.title%>">
+                        </div>
+                        <div>
+                            <label for="postTitle">Post Content</label>
+                            <input type="text" class="form-control" id="content<%= post.id%>" value="<%= post.content%>" placeholder="<%= post.content%>">
+                        </div>
+                        <button onclick='editPost("<%= post.id %>", "<%= post.creatorID %>")'>Submit Edits</button> 
+                        <button onclick='deletePost("<%= post.id %>")'>Delete Post</button>
                     </li>
                 <%})%>
-            </ul>
+            </ul> 
         </main>
     </body>
 </html>
