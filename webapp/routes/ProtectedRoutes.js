@@ -4,7 +4,7 @@ const {db, auth, secret_key} = require('../utils/firebaseConfig');
 const Post = require('../models/Post');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const { addDoc, collection, query, where, getDocs } = require('firebase/firestore');
+const { addDoc, collection, query, where, getDocs, deleteDoc, setDoc } = require('firebase/firestore');
 
 // Add Post
 // TODO: add new post to database
@@ -41,7 +41,28 @@ router.get('/protected/myposts', (req, res) => {
 });
 
 router.delete('/protected/deletePost', (req,res)=> {
-    
+    if (req.query.postID == undefined || req.query.postID == null) res.sendStatus(403);
+    let postID = req.query.postID; 
+    deleteDoc(doc(db,'posts', postID))
+    .then(() =>{
+        res.sendStatus(200);
+    })
+    .catch(()=>{
+        res.sendStatus(404);
+    })
 })
+
+router.put('/protected/editPost', (req, res)=> {
+    let postContent = {
+        creatorID: res.body.creatorID,
+        content: res.body.content, 
+        title: res.body.title, 
+        date: moment().format('MM/DD/YY hh:mm:ss A'),
+    }
+    setDoc(doc(db, 'posts', res.body.postID), postContent)
+    .then(() => {
+        res.sendStatus(200);
+    });
+});
 
 module.exports = router;
