@@ -37,6 +37,8 @@
                         body: JSON.stringify({
                             idToken: response.credential,
                         }),
+                    }).then(() => {
+                        window.location.href = '/';
                     })
                 }
                 window.onload = function () {
