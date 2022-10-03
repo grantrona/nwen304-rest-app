@@ -53,7 +53,21 @@ authRoutes.post('/login/google', (req, res) => {
   })
 });
 
+function checkPassword (password) {
+  if (password.length <= 6) return "Password must be greater than 6 characters";
+  if (password.search(/[A-Z]/) == -1) return "Password must contain an uppercase letter";
+  if (password.search(/[0-9]/) == -1) return "Password must contain a number";
+  if (password.search(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/) == -1) return "Password must contain a special character";
+  return "";
+}
+
 authRoutes.post('/signup/email',(req,res) => {
+  let password = req.body.password;
+  let passwordResp = checkPassword(password);
+  if (passwordResp != "") {
+    res.status(403).send(passwordResp);
+    return;
+  }
   createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
   .then(userCredentials => {
     let uidToken = {id: userCredentials.user.uid};
@@ -66,7 +80,7 @@ authRoutes.post('/signup/email',(req,res) => {
     });
   })
   .catch((error) => {
-      res.status(400).send(error.message);
+      res.status(403).send(error.message);
   })
 });
 
