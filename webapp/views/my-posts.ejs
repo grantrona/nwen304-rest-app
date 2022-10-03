@@ -6,28 +6,30 @@
         <script src="/controllers/my-posts.js"></script>
     </head>
 
-    <body>
+    <body style="background-color: #222831; padding-top: 51px;">
+        <div class="container">
         <main>
             <header>
                 <%- include('partials/navbar', {isAuth: isAuth}); %>
             </header>
-            <h1>My Posts</h1>
-            <ul id="postList">
+            <h1 style="color: #EEEEEE">My Posts</h1>
+            <ul id="postList" >
                 <%posts.map((post) => {%>
-                    <li class="postListItem">
+                    <li class="postListItem" style="background-color: #EEEEEE; border-radius: 10px; padding: 20px; margin-bottom: 10px;">
                         <div>
                             <label for="postTitle">Post Title</label>
-                            <input type="text" class="form-control" id="title<%= post.id%>" value="<%= post.title%>" placeholder="<%= post.title%>" autocomplete='off'>
+                            <input type="text" style="margin-bottom: 5px;" class="form-control" id="title<%= post.id%>" value="<%= post.title%>" placeholder="<%= post.title%>" autocomplete='off'>
                         </div>
                         <div>
                             <label for="postTitle">Post Content</label>
-                            <input type="text" class="form-control" id="content<%= post.id%>" value="<%= post.content%>" placeholder="<%= post.content%>" autocomplete='off'>
+                            <input type="text" style="margin-bottom: 5px;" class="form-control" id="content<%= post.id%>" value="<%= post.content%>" placeholder="<%= post.content%>" autocomplete='off'>
                         </div>
-                        <button onclick='editPost("<%= post.id %>", "<%= post.creatorID %>")'>Submit Edits</button> 
-                        <button onclick='deletePost("<%= post.id %>")'>Delete Post</button>
+                        <button style="border-radius: 5px;" onclick='editPost("<%= post.id %>", "<%= post.creatorID %>")' class="btn-primary">Submit Edits</button> 
+                        <button style="border-radius: 5px;" onclick='deletePost("<%= post.id %>")' class="btn-danger">Delete Post</button>
                     </li>
                 <%})%>
             </ul> 
         </main>
+    </div>
     </body>
 </html>
