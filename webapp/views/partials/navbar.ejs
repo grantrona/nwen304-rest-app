@@ -16,7 +16,7 @@
                 <a href="/addPost" style="font-weight: bold;">Add Post</a>
             </li>
             <li class="navItem">
-              <a href="/protected/myposts">My Posts</a>
+              <a href="/protected/myposts" style="font-weight:bold">My Posts</a>
             </li>
             <% } %>
             <!--If logged in, hide sign up and login buttons-->
@@ -31,7 +31,7 @@
             <!--If logged in show sign out button-->
             <% if (isAuth) {%>
             <li class="navItem">
-                <a href="/signout" style="font-weight: bold;">Sign Out</a>
+                <a href="/signout" style="font-weight: normal">Sign Out</a>
             </li>
             <% } %>
         </ul>
