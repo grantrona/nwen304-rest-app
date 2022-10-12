@@ -1,55 +1,76 @@
 const express = require('express');
 const authRoutes = express.Router();
-const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential, signOut, updateProfile } = require('firebase/auth');
-const { getDoc, setDoc, doc } = require('firebase/firestore');
+const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential, signOut, updateProfile, signInWithCustomToken, OAuthCredential } = require('firebase/auth');
+const { getDoc, setDoc, doc, getDocs, collection, QuerySnapshot, addDoc, query, where, limit } = require('firebase/firestore');
 const jwt = require('jsonwebtoken');
 const {db, auth, secret_key} = require('../utils/firebaseConfig');
+const { sha256 } = require('js-sha256');
+const { nanoid } = require('nanoid');
 
+ 
 // Middleware checks token is valid before continuing with request
 function checkToken(req, res, next) {
   let cookie = req.cookies['session'] || '';
   jwt.verify(cookie, secret_key, (err, data)=>{
-    if (err) res.sendStatus(400);
+    if (err) res.status(403).send("Account details mismatch, please try again.");
     else next();
-  });
+  })
 } 
 
 // Based on code from Firebase demos 
 authRoutes.post('/login/email',(req,res) => {
-  // Sign In with firebase function
-  signInWithEmailAndPassword(auth, req.body.email, req.body.password)
-  .then(userCredentials => {
-    let uidToken = {id: userCredentials.user.uid};
-    let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
-    res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-    res.sendStatus(200);
+  getDocs(query(collection(db,'users'), where("email", "==", req.body.email), limit(1)))
+  .then((docSnapshot) => {
+    if (docSnapshot.empty) {res.status(400).send("No account with this email found"); return; }
+    docSnapshot.forEach(doc => {
+      if (doc.exists()) {
+        if (sha256(req.body.password) == doc.data()['password']) {
+          let uid = jwt.verify(doc.data()['secretToken'], secret_key);
+          let uidToken = {...uid, id: doc.id};
+          let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 10800});
+          res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
+          res.sendStatus(200);
+        } else {
+          res.status(400).send("Incorrect password");
+        }
+      }
+    })
   })
   .catch(err=> {
-    res.status(400).send(err.message)
+      res.status(400).send(err.message)
   })
-
 });
 
 authRoutes.post('/login/google', (req, res) => {
   const idToken = req.body.idToken; 
   const credential = GoogleAuthProvider.credential(idToken);
-  signInWithCredential(auth, credential)
-  .then(userCredentials => {
-    let uidToken = {id: userCredentials.user.uid};
-    let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
-    getDoc(doc(db,'users',userCredentials.user.uid))
-    .then(docSnapshot => {
-      if (!docSnapshot.exists()){
-        setDoc(doc(db,'users',userCredentials.user.uid), {displayName: userCredentials.user.displayName})
-        .then(()=>{
-          res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-          res.sendStatus(200);
-        });
-      } else {
-        res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-        res.sendStatus(200);
-      }
-    })
+  let email = jwt.decode(credential['idToken'])['email'];
+  getDocs(collection(db,'users'), where("email","==",email), limit(1))
+  .then(snapshot => {
+    if (!snapshot.empty) res.status(403).send("Email already associated with an account");
+    else {
+      signInWithCredential(auth, credential)
+      .then(userCredentials => {
+        getDoc(doc(db,'users',userCredentials.user.uid))
+        .then(docSnapshot => {
+          let userData = {
+            email:userCredentials.user.email,
+            displayName:userCredentials.user.displayName,
+          };
+          let jwtToken = jwt.sign({...userData,secretID:nanoid()}, secret_key, {expiresIn: 10800});
+          if (!docSnapshot.exists()){
+            setDoc(doc(db,'users',userCredentials.user.uid), userData)
+            .then(()=>{
+              res.cookie('session', jwtToken, {httpOnly: true, sameSite: true});
+              res.sendStatus(200);
+            });
+          } else {
+            res.cookie('session', jwtToken, {httpOnly: true, sameSite: true});
+            res.sendStatus(200);
+          }
+        })
+      })
+    }
   })
 });
 
@@ -61,6 +82,12 @@ function checkPassword (password) {
   return "";
 }
 
+/* 
+  Get email, password and display name from user.
+  Create web token based on this information and a secret key.
+  Add web token to data and put in firebase collection.
+  
+*/
 authRoutes.post('/signup/email',(req,res) => {
   let password = req.body.password;
   let passwordResp = checkPassword(password);
@@ -68,29 +95,31 @@ authRoutes.post('/signup/email',(req,res) => {
     res.status(403).send(passwordResp);
     return;
   }
-  createUserWithEmailAndPassword(auth, req.body.email, req.body.password)
-  .then(userCredentials => {
-    let uidToken = {id: userCredentials.user.uid};
-    let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 90000});
-    updateProfile(userCredentials.user, {displayName: req.body.displayName});
-    setDoc(doc(db,'users',userCredentials.user.uid), {displayName: req.body.displayName})
-    .then(()=>{
-      res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
-      res.sendStatus(200);
-    });
-  })
+  getDocs(query(collection(db,'users'), where("email","==",req.body.email)))
+  .then((docsSnapshot) => {
+    if (!docsSnapshot.empty) res.status(403).send("User already exists with this email");
+    else {
+      let userData = {
+        email: req.body.email,
+        displayName: req.body.displayName,
+        password: sha256(password), 
+      }
+      let jwtToken = jwt.sign({...userData,secretID: nanoid()},secret_key)
+      addDoc(collection(db,'users'), {...userData, secretToken:jwtToken})
+      .then(
+        res.sendStatus(200)
+      );
+    }
+  })  
   .catch((error) => {
-      res.status(403).send(error.message);
+    res.status(403).send(error.message);
   })
 });
 
 
 authRoutes.get('/signout',(req,res) => {
-  signOut(auth)
-  .then(()=>{
-    res.clearCookie('session', {httpOnly: true, sameSite: true});
-    res.redirect('/');
-  })
+  res.clearCookie('session', {httpOnly: true, sameSite: true});
+  res.redirect('/');
 });
 
 // Middleware added to anything in /protected route
