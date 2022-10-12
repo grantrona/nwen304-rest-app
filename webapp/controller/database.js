@@ -1,5 +1,15 @@
 const {db} = require('../utils/firebaseConfig');
-const { addDoc, collection, query, where, getDocs, deleteDoc, setDoc, doc, limit } = require('firebase/firestore');
+const { 
+    addDoc, 
+    collection, 
+    query, 
+    where, 
+    getDocs, 
+    deleteDoc, 
+    setDoc, 
+    doc, 
+    limit 
+} = require('firebase/firestore');
 
 /**
  * Adds the given post to the database.
@@ -46,6 +56,8 @@ function getPosts(count){
  * 
  * @param {number} count How many posts to retrieve
  * @param {string} creatorID Identifier of a user
+ * 
+ * @return {Post[]} Array of posts from database, returns an empty array on failure.
  */
  function getCreatorPosts(count, creatorID){
     const userQuery = query(
@@ -77,6 +89,8 @@ function getPosts(count){
  * Deletes post in the database specified by postID.
  * 
  * @param {string} postID Unique identifier for post to delete
+ * 
+ * @return {number} Returns the response code (200 for success, 400 for failure).
  */
 function deletePost(postID){
     deleteDoc(doc(db,'posts',postID))
@@ -93,6 +107,8 @@ function deletePost(postID){
  * 
  * @param {Post} updatedPost The replacing post.
  * @param {string} postID Unique identifier for the post to update.
+ * 
+ * @return {number} Returns the response code (200 for success, 400 for failure).
  */
 function updatePost(updatedPost, postID){
     setDoc(doc(db, 'posts', postID), updatedPost)
@@ -104,4 +120,4 @@ function updatePost(updatedPost, postID){
     });
 }
 
-module.exports = {addPost, getCreatorPosts, getPosts};
+module.exports = {addPost, getCreatorPosts, getPosts, deletePost, updatePost};
