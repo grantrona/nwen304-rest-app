@@ -7,6 +7,7 @@ const cors = require('cors');
 const path = require('path');
 const userRoutes = require('./routes/UserRoutes');
 const protectedRoutes = require('./routes/ProtectedRoutes');
+const serviceRoutes = require('./routes/serviceRoutes');
 /*----------------------------------- Server config ------------------------------------------*/
 const app = express();
 // Setup ejs template engine:
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser())
 // specify static files and routes to use:
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(serviceRoutes);
 app.use(authRoutes);
 app.use(protectedRoutes);
 app.use(userRoutes);
