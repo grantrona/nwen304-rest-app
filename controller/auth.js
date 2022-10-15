@@ -1,6 +1,6 @@
-const {db, secret_key} = require('../utils/firebaseConfig');
-const jwt = require('jsonwebtoken');
-const { collection, query, where, getDocs} = require('firebase/firestore');
+const {db} = require('../utils/firebaseConfig');
+const { collection, query, where, getDocs, limit} = require('firebase/firestore');
+const { sha256 } = require('js-sha256');
 
 /**
  * Attempts to find the user with the given email and checks their hashed password matches.
@@ -12,21 +12,36 @@ const { collection, query, where, getDocs} = require('firebase/firestore');
  * @return {string} The creatorID of the given account, or null if unable to retrieve.
  */
 function serviceLogin(email, password){
-    getDocs(query(collection(db,'users'), where("email", "==", email), limit(1)))
+  return getDocs(query(collection(db,'users'), where("email", "==", email), limit(1)))
     .then((docSnapshot) => {
       if (docSnapshot.empty) {return null;}
-      docSnapshot.forEach(doc => {
+      // docSnapshot.forEach(doc => {
+      //   if (doc.exists()) {
+      //     if (sha256(password) == doc.data()['password']) {
+      //       console.log("MATCH: ", doc.id);
+      //       return doc.id; // doc id should be the creatorID
+      //     } else {
+      //       console.log("NON-MATCH");
+      //       return null;
+      //     }
+      //   }
+      // });
+      for(doc of docSnapshot.docs){
         if (doc.exists()) {
           if (sha256(password) == doc.data()['password']) {
-            return doc.data()['creatorID'];
+            console.log("MATCH: ", doc.id);
+            return doc.id; // doc id should be the creatorID
           } else {
+            console.log("NON-MATCH");
             return null;
           }
         }
-      })
+      }
+      console.log("HOW DID I GET HERE");
+      return null;
     })
     .catch(err=> {
-        return null;
+      return null;
     })
 }
 

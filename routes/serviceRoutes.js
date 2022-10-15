@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const moment = require('moment');
 const { addPost, getPosts } = require('../controller/database');
 const { serviceLogin } = require('../controller/auth');
+const Post = require('../models/Post');
 
 /**
  * Responds to GET requests by sending JSON of posts.
@@ -30,16 +32,28 @@ router.get('/service', (req, res) => {
  */
 router.post('/service', (req, res) => {
     // body should contain email, password, title and content
-
-    const creatorID = serviceLogin(req.body.email, req.body.password);
-    if(creatorID === null){ // Unable to retrieve email / password login
-        res.sendStatus(401); // Unauthorized
+    console.log("email: ", req.body.email, ", password: ", req.body.password);
+    if(req.body.email == undefined || req.body.password == undefined){
+        res.sendStatus(400);
         return;
     }
 
-    const timestamp = moment().format('MM/DD/YY hh:mm:ss A')
-    const newPost = new Post(req.body.title, req.body.content, timestamp, creatorID);
-    addPost(newPost);
+    serviceLogin(req.body.email, req.body.password)
+        .then((creatorID) => {
+            console.log("Wacky id: ", creatorID);
+            if(creatorID === null || creatorID === undefined){ // Unable to retrieve email / password login
+                res.sendStatus(401); // Unauthorized
+                return;
+            }
+            
+            const timestamp = moment().format('MM/DD/YY hh:mm:ss A')
+            const newPost = new Post(req.body.title, req.body.content, timestamp, creatorID);
+            addPost(newPost);
+            res.sendStatus(200)
+        })
+        .catch((err) => {
+            res.sendStatus(500);
+        });
 });
 
 module.exports = router;
