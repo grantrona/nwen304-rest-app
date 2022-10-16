@@ -5,21 +5,23 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
 
-    <body>
+    <body style="padding-top: 51px;">
         <main>
             <header>
                 <%- include('partials/navbar', {isAuth: isAuth}); %>
             </header>
-            <h1>Posts By <%= displayName %></h1>
-            <ul id="postList">
-                <%posts.map((post) => {%>
-                    <li class="postListItem">
-                        <h3 class="postTitle"><%= post.title %></h3>
-                        <h4 class="postContent"><%= post.content %></h4>
-                        <p class="postContent"><%= post.date %></p>
-                    </li>
-                <%})%>
-            </ul>
+            <div class="container-fluid">
+                <h1>Posts By <%= displayName %></h1>
+                <ul id="postList">
+                    <%posts.map((post) => {%>
+                        <li class="postListItem">
+                            <h3 class="postTitle"><%= post.title %></h3>
+                            <h4 class="postContent"><%= post.content %></h4>
+                            <p class="postContent"><%= post.date %></p>
+                        </li>
+                    <%})%>
+                </ul>
+            </div>
         </main>
     </body>
 </html>
