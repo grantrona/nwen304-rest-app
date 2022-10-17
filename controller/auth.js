@@ -34,4 +34,11 @@ function serviceLogin(email, password){
     })
 }
 
+/**
+ * Returns the current user based on the creatorID in 
+ */
+function getCurrentUser(){
+  
+}
+
 module.exports = { serviceLogin };

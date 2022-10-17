@@ -14,6 +14,10 @@ router.use('/signup', (req, res) => {
     res.render('register', {isAuth: false})
 });
 
+router.use('/reset-password', (req, res) => {
+    res.render('reset-password', {isAuth: false});
+});
+
 // Navigate to add post html file
 router.get('/addPost', (req, res) =>{
     res.render('add-post', {isAuth: req.cookies['session']? true: false})
