@@ -45,7 +45,7 @@ authRoutes.post('/login/google', (req, res) => {
   const idToken = req.body.idToken; 
   const credential = GoogleAuthProvider.credential(idToken);
   let email = jwt.decode(credential['idToken'])['email'];
-  getDocs(collection(db,'users'), where("email","==",email), limit(1))
+  getDocs(query(collection(db,'users'), where("email","==",email), limit(1)))
   .then(snapshot => {
     if (!snapshot.empty) res.status(403).send("Email already associated with an account");
     else {
