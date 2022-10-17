@@ -26,7 +26,8 @@ authRoutes.post('/login/email',(req,res) => {
       if (doc.exists()) {
         if (sha256(req.body.password) == doc.data()['password']) {
           let uid = jwt.verify(doc.data()['secretToken'], secret_key);
-          let uidToken = {...uid, id: doc.id};
+          let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:uid['secretID'],id: doc.id};
+          console.log(uidToken);
           let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 10800});
           res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
           res.sendStatus(200);
@@ -47,7 +48,15 @@ authRoutes.post('/login/google', (req, res) => {
   let email = jwt.decode(credential['idToken'])['email'];
   getDocs(query(collection(db,'users'), where("email","==",email), limit(1)))
   .then(snapshot => {
-    if (!snapshot.empty) res.status(403).send("Email already associated with an account");
+    if (!snapshot.empty) {
+      let doc = snapshot.docs[0];
+      let uid = jwt.verify(doc.data()['secretToken'], secret_key);
+      let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:uid['secretID'],id: doc.id};
+      let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 10800});
+      res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
+      res.sendStatus(200);
+      return;
+    }
     else {
       signInWithCredential(auth, credential)
       .then(userCredentials => {
@@ -59,7 +68,7 @@ authRoutes.post('/login/google', (req, res) => {
           };
           let jwtToken = jwt.sign({...userData,secretID:nanoid()}, secret_key, {expiresIn: 10800});
           if (!docSnapshot.exists()){
-            setDoc(doc(db,'users',userCredentials.user.uid), userData)
+            setDoc(doc(db,'users',userCredentials.user.uid), {...userData, secretToken:jwtToken})
             .then(()=>{
               res.cookie('session', jwtToken, {httpOnly: true, sameSite: true});
               res.sendStatus(200);
