@@ -28,6 +28,12 @@
                 <a href="/login">Log In</a>
             </li>
             <% } %>
+            <!--If logged in show profile button-->
+            <% if (isAuth) {%>
+              <li class="navItem">
+                  <a href="/protected/profile" style="font-weight: normal">Profile</a>
+              </li>
+              <% } %>
             <!--If logged in show sign out button-->
             <% if (isAuth) {%>
             <li class="navItem">

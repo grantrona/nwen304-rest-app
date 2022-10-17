@@ -39,6 +39,12 @@ router.get('/protected/myposts', (req, res) => {
     })
 });
 
+router.get('/protected/profile', (req, res) => {
+    const user = {id: 2, name: "Todd Howard"}; // temp fake user
+
+    res.render('profile', {user: user});
+});
+
 router.delete('/protected/deletePost', (req,res)=> {
     if (req.body.postID == undefined || req.body.postID == null) res.sendStatus(404);
     let postID = req.body.postID; 
