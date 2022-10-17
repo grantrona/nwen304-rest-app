@@ -15,17 +15,6 @@ function serviceLogin(email, password){
   return getDocs(query(collection(db,'users'), where("email", "==", email), limit(1)))
     .then((docSnapshot) => {
       if (docSnapshot.empty) {return null;}
-      // docSnapshot.forEach(doc => {
-      //   if (doc.exists()) {
-      //     if (sha256(password) == doc.data()['password']) {
-      //       console.log("MATCH: ", doc.id);
-      //       return doc.id; // doc id should be the creatorID
-      //     } else {
-      //       console.log("NON-MATCH");
-      //       return null;
-      //     }
-      //   }
-      // });
       for(doc of docSnapshot.docs){
         if (doc.exists()) {
           if (sha256(password) == doc.data()['password']) {
