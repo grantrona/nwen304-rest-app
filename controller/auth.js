@@ -1,6 +1,7 @@
 const {db} = require('../utils/firebaseConfig');
 const { collection, query, where, getDocs, limit} = require('firebase/firestore');
 const { sha256 } = require('js-sha256');
+const { getAuth, sendPasswordResetEmail } = require('firebase/auth');
 
 /**
  * Attempts to find the user with the given email and checks their hashed password matches.
@@ -41,4 +42,8 @@ function getCurrentUser(){
   
 }
 
-module.exports = { serviceLogin };
+function sendPasswordReset(email){
+  return sendPasswordResetEmail(getAuth(), email);
+}
+
+module.exports = { serviceLogin, sendPasswordReset };

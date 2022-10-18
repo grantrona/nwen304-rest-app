@@ -42,7 +42,7 @@ router.get('/protected/myposts', (req, res) => {
 router.get('/protected/profile', (req, res) => {
     const user = {id: 2, name: "Todd Howard"}; // temp fake user
 
-    res.render('profile', {user: user});
+    res.render('profile', {isAuth: true, user: user});
 });
 
 router.delete('/protected/deletePost', (req,res)=> {
