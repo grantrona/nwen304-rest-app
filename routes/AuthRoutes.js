@@ -7,13 +7,25 @@ const {db, auth, secret_key} = require('../utils/firebaseConfig');
 const { sha256 } = require('js-sha256');
 const { nanoid } = require('nanoid');
 
+
+/*
+  All tokens expire in 300 seconds (5 minutes).
+  Can be changed to less or more if we want to demo.  
+*/
  
 // Middleware checks token is valid before continuing with request
 function checkToken(req, res, next) {
   let cookie = req.cookies['session'] || '';
   jwt.verify(cookie, secret_key, (err, data)=>{
-    if (err) res.status(403).send("Account details mismatch, please try again.");
-    else next();
+    if (err) {
+      res.render('error',{message: "Credentials expired or incorrect, please login again"});
+    }
+    else {
+      delete data.iat;
+      delete data.exp;
+      res.cookie(jwt.sign(data, secret_key, {expiresIn: 300}));
+      next();
+    }
   })
 } 
 
@@ -27,8 +39,7 @@ authRoutes.post('/login/email',(req,res) => {
         if (sha256(req.body.password) == doc.data()['password']) {
           let uid = jwt.verify(doc.data()['secretToken'], secret_key);
           let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:uid['secretID'],id: doc.id};
-          console.log(uidToken);
-          let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 10800});
+          let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 300});
           res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
           res.sendStatus(200);
         } else {
@@ -50,9 +61,9 @@ authRoutes.post('/login/google', (req, res) => {
   .then(snapshot => {
     if (!snapshot.empty) {
       let doc = snapshot.docs[0];
-      let uid = jwt.verify(doc.data()['secretToken'], secret_key);
+      let uid = jwt.decode(doc.data()['secretToken'], secret_key);
       let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:uid['secretID'],id: doc.id};
-      let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 10800});
+      let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 300});
       res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
       res.sendStatus(200);
       return;
@@ -66,7 +77,7 @@ authRoutes.post('/login/google', (req, res) => {
             email:userCredentials.user.email,
             displayName:userCredentials.user.displayName,
           };
-          let jwtToken = jwt.sign({...userData,secretID:nanoid()}, secret_key, {expiresIn: 10800});
+          let jwtToken = jwt.sign({...userData,secretID:nanoid()}, secret_key, {expiresIn: 300});
           if (!docSnapshot.exists()){
             setDoc(doc(db,'users',userCredentials.user.uid), {...userData, secretToken:jwtToken})
             .then(()=>{
@@ -101,7 +112,7 @@ authRoutes.post('/signup/email',(req,res) => {
   let password = req.body.password;
   let passwordResp = checkPassword(password);
   if (passwordResp != "") {
-    res.status(403).send(passwordResp);
+    res.status(error).send(passwordResp);
     return;
   }
   getDocs(query(collection(db,'users'), where("email","==",req.body.email)))

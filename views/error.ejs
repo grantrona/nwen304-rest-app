@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Error!</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    </head>
+
+    <body style="background-color: #222831; padding-top: 51px;">
+        <div class="container">
+        <header>
+            <%- include('partials/navbar', {isAuth: false}); %>
+        </header>
+        <main>
+            <h1 style="color: #EEEEEE"><%= message %></h1>
+        </main>
+    </div>
+    </body>
+</html>
