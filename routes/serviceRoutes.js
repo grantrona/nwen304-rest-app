@@ -32,7 +32,6 @@ router.get('/service', (req, res) => {
  */
 router.post('/service', (req, res) => {
     // body should contain email, password, title and content
-    console.log("email: ", req.body.email, ", password: ", req.body.password);
     if(req.body.email == undefined || req.body.password == undefined){
         res.sendStatus(400);
         return;
@@ -40,7 +39,6 @@ router.post('/service', (req, res) => {
 
     serviceLogin(req.body.email, req.body.password)
         .then((creatorID) => {
-            console.log("Wacky id: ", creatorID);
             if(creatorID === null || creatorID === undefined){ // Unable to retrieve email / password login
                 res.sendStatus(401); // Unauthorized
                 return;
