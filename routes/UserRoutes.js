@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { db } = require('../utils/firebaseConfig');
+const { sendPasswordReset } = require('../controller/auth');
 const { getDocs, where, query, getDoc, doc, collection} = require('firebase/firestore');
 const moment = require('moment');
 
@@ -14,8 +15,20 @@ router.use('/signup', (req, res) => {
     res.render('register', {isAuth: false})
 });
 
-router.use('/reset-password', (req, res) => {
+router.get('/reset-password', (req, res) => {
     res.render('reset-password', {isAuth: false});
+});
+
+router.post('/reset-password/submit', (req, res) => {
+    sendPasswordReset(req.body.email)
+        .then(() => {
+            console.log("SUCCESS");
+            res.sendStatus(200);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.sendStatus(500);
+        });
 });
 
 // Navigate to add post html file
