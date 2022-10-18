@@ -61,7 +61,7 @@ authRoutes.post('/login/google', (req, res) => {
   .then(snapshot => {
     if (!snapshot.empty) {
       let doc = snapshot.docs[0];
-      let uid = jwt.verify(doc.data()['secretToken'], secret_key);
+      let uid = jwt.decode(doc.data()['secretToken'], secret_key);
       let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:uid['secretID'],id: doc.id};
       let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 300});
       res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
