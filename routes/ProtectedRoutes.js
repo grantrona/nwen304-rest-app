@@ -53,7 +53,7 @@ router.delete('/protected/deletePost', (req,res)=> {
         res.sendStatus(200);
     })
     .catch(()=>{
-        res.sendStatus(403);
+        res.status(403).send("Something went wrong, please try again.");
     })
 })
 
@@ -70,7 +70,7 @@ router.put('/protected/editPost', (req, res)=> {
         res.sendStatus(200);
     })
     .catch(() => {
-        res.sendStatus(400);
+        res.status(400).send("Something went wrong, please try again.");
     });
 });
 

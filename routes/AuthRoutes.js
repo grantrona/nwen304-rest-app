@@ -21,13 +21,19 @@ function checkToken(req, res, next) {
       res.render('error',{message: "Credentials expired or incorrect, please login again"});
     }
     else {
-      delete data.iat;
-      delete data.exp;
-      res.cookie(jwt.sign(data, secret_key, {expiresIn: 300}));
       next();
     }
   })
 } 
+
+function refreshToken(req, res, next) {
+  let cookie = req.cookies['session'] || '';
+  let data = jwt.decode(cookie, secret_key);
+  delete data.iat;
+  delete data.exp;
+  res.cookie(jwt.sign(data, secret_key, {expiresIn: 300}));
+  next();
+}
 
 // Based on code from Firebase demos 
 authRoutes.post('/login/email',(req,res) => {
@@ -143,7 +149,7 @@ authRoutes.get('/signout',(req,res) => {
 });
 
 // Middleware added to anything in /protected route
-authRoutes.use('/protected', checkToken);
+authRoutes.use('/protected', checkToken, refreshToken);
 
 
 module.exports = authRoutes;
