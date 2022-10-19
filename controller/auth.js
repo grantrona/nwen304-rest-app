@@ -1,19 +1,24 @@
 const { db, secret_key } = require('../utils/firebaseConfig');
-const { collection, query, where, getDocs, limit, doc} = require('firebase/firestore');
+const { 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  limit, 
+  doc, 
+  getDoc, 
+  setDoc
+} = require('firebase/firestore');
 const { sha256 } = require('js-sha256');
-const { getAuth, sendPasswordResetEmail } = require('firebase/auth');
-
+const jwt = require('jsonwebtoken');
 
 /**
- * Returns docsnapshot on the user specified by the given email.
- * 
- * Of note is that the docSnapshot will need to be iterated through, though should only
- * contain one entry.
+ * Returns doc for the user specified by the given email.
  * 
  * @param {string} email Email address of user to get.
  * @return {Document} Returns a Firestore Document of the user.
  */
- function getUser(email){
+ function getUserByEmail(email){
   return getDocs(query(collection(db,'users'), where("email", "==", email), limit(1)))
     .then((docSnapshot) => {
       if (docSnapshot.empty) {return null;}
@@ -22,6 +27,22 @@ const { getAuth, sendPasswordResetEmail } = require('firebase/auth');
           return doc;
         }
       }
+      return null;
+    })
+}
+
+/**
+ * Returns the doc on the user specified by the given user ID.
+ * 
+ * @param {string} id ID of user to get.
+ * @return {Document} Returns a Firestore Document of the user.
+ */
+ function getUserByID(id){
+  return getDoc(doc(db,'users', id))
+    .then((doc) => {
+        if (doc.exists()) {
+          return doc;
+        }
       return null;
     })
 }
@@ -36,7 +57,7 @@ const { getAuth, sendPasswordResetEmail } = require('firebase/auth');
  * @return {string} The creatorID of the given account, or null if unable to retrieve.
  */
 function serviceLogin(email, password){
-    return getUser(email)
+    return getUserByEmail(email)
       .then((doc) => {
         if(doc === null) return null;
         if (sha256(password) == doc.data()['password']) {
@@ -56,16 +77,73 @@ function serviceLogin(email, password){
  * 
  * @param {string} email Email of the user to update.
  */
-function updatePassword(email){
-  getUser(email)
+function sendPasswordResetEmail(email){
+  return getUserByEmail(email)
     .then((doc) => {
       if(doc === null) return null;
+      const user = doc.data();
       const secret = secret_key + doc.password;
+      const token = jwt.sign(
+        {email: user.email, id: doc.id}, 
+        secret, 
+        {expiresIn: 300} // 5 minutes
+      ); 
+      const link = `http://localhost:3000/reset-password/${doc.id}/${token}`;
+      console.log(link);
+
     });
 }
 
-function sendPasswordReset(email){
-  return sendPasswordResetEmail(getAuth(), email);
+/**
+ * Checks that the given token is valid for the given user.
+ * 
+ * @param {string} id User ID to check.
+ * @param {string} token Token to check against the user.
+ * @returns True if the given token fits with the given user, false otherwise.
+ */
+function isValidToken(id, token){
+  const user = getUserByID(id);
+  if(user === null) return false;
+
+  const secret = secret_key + user.password;
+  try {
+    const verify = jwt.verify(token, secret);
+    return true;
+  }catch (err){
+    return false;
+  }
 }
 
-module.exports = { serviceLogin, sendPasswordReset };
+/**
+ * Updates the user specified with a given id.
+ * 
+ * @param {string} id Id of the user to update.
+ * @param {string} name New name to update to.
+ * @param {string} email New email to update to.
+ * @param {string} password New password to update to
+ * @param {string} token New token to update to.
+ * @returns A Promise<void>, which resolves once doc us successfully updated.
+ */
+function updateUser(id, name, email, password, token){
+  const updatedUser = {
+    displayName: name,
+    email: email,
+    password: password,
+    secretToken: token,
+  };
+
+  return setDoc(doc(db, "users", id), updatedUser);
+}
+
+
+function updatePassword(newPassword){
+  const encryptedPassword = sha256(newPassword);
+  
+}
+
+module.exports = { 
+  serviceLogin, 
+  sendPasswordResetEmail, 
+  isValidToken, 
+  updatePassword 
+};
