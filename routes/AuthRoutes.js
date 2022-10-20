@@ -3,10 +3,10 @@ const authRoutes = express.Router();
 const { GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithCredential, signOut, updateProfile, signInWithCustomToken, OAuthCredential } = require('firebase/auth');
 const { getDoc, setDoc, doc, getDocs, collection, QuerySnapshot, addDoc, query, where, limit } = require('firebase/firestore');
 const jwt = require('jsonwebtoken');
-const {db, auth, secret_key} = require('../utils/firebaseConfig');
+const {db, auth, secret_key, secret_message} = require('../utils/firebaseConfig');
 const { sha256 } = require('js-sha256');
 const { nanoid } = require('nanoid');
-
+const CryptoJS = require('crypto-js');
 
 /*
   All tokens expire in 300 seconds (5 minutes).
@@ -21,7 +21,11 @@ function checkToken(req, res, next) {
       res.render('error',{message: "Credentials expired or incorrect, please login again"});
     }
     else {
-      next();
+      if (!(CryptoJS.AES.decrypt(data['secretID'],secret_key).toString(CryptoJS.enc.Utf8).includes(secret_message))) {
+        res.render('error',{message: "Credentials expired or incorrect, please login again"});
+      } else {
+        next();
+      }
     }
   })
 } 
@@ -43,8 +47,8 @@ authRoutes.post('/login/email',(req,res) => {
     docSnapshot.forEach(doc => {
       if (doc.exists()) {
         if (sha256(req.body.password) == doc.data()['password']) {
-          let uid = jwt.verify(doc.data()['secretToken'], secret_key);
-          let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:uid['secretID'],id: doc.id};
+          let secretID = CryptoJS.AES.encrypt(nanoid()+secret_message,secret_key).toString();
+          let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:secretID,id: doc.id};
           let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 300});
           res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
           res.sendStatus(200);
@@ -67,8 +71,8 @@ authRoutes.post('/login/google', (req, res) => {
   .then(snapshot => {
     if (!snapshot.empty) {
       let doc = snapshot.docs[0];
-      let uid = jwt.decode(doc.data()['secretToken'], secret_key);
-      let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:uid['secretID'],id: doc.id};
+      let secretID = CryptoJS.AES.encrypt((nanoid()+secret_message),secret_key).toString();
+      let uidToken = {...doc.data(),secretID:secretID,id: doc.id};
       let sessionCookie = jwt.sign(uidToken, secret_key, {expiresIn: 300});
       res.cookie('session', sessionCookie, {httpOnly: true, sameSite: true});
       res.sendStatus(200);
@@ -82,10 +86,12 @@ authRoutes.post('/login/google', (req, res) => {
           let userData = {
             email:userCredentials.user.email,
             displayName:userCredentials.user.displayName,
-          };
-          let jwtToken = jwt.sign({...userData,secretID:nanoid()}, secret_key, {expiresIn: 300});
+          };     
+          let secretID = CryptoJS.AES.encrypt(nanoid()+secret_message,secret_key).toString();
+          let uidToken = {email: doc.data()['email'],displayName: doc.data()['displayName'],secretID:secretID,id: doc.id};
+          let jwtToken = jwt.sign(uidToken, secret_key, {expiresIn: 300});
           if (!docSnapshot.exists()){
-            setDoc(doc(db,'users',userCredentials.user.uid), {...userData, secretToken:jwtToken})
+            setDoc(doc(db,'users',userCredentials.user.uid), userData)
             .then(()=>{
               res.cookie('session', jwtToken, {httpOnly: true, sameSite: true});
               res.sendStatus(200);
@@ -130,8 +136,7 @@ authRoutes.post('/signup/email',(req,res) => {
         displayName: req.body.displayName,
         password: sha256(password), 
       }
-      let jwtToken = jwt.sign({...userData,secretID: nanoid()},secret_key)
-      addDoc(collection(db,'users'), {...userData, secretToken:jwtToken})
+      addDoc(collection(db,'users'), userData)
       .then(
         res.sendStatus(200)
       );

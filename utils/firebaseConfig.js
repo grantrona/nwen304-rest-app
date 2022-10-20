@@ -1,4 +1,5 @@
 const secret_key = process.env.SECRET_KEY || 'secret_key';
+const secret_message = process.env.SECRET_MESSAGE || 'secret_message';
 const { initializeApp } = require('firebase/app');
 const { getFirestore } = require('firebase/firestore');
 const { getAuth } = require('firebase/auth');
@@ -16,4 +17,4 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
-module.exports = {app: firebaseApp, db: db, auth: auth, secret_key: secret_key};
+module.exports = {app: firebaseApp, db: db, auth: auth, secret_key: secret_key, secret_message: secret_message};
