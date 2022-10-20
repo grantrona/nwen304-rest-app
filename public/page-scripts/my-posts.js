@@ -13,7 +13,16 @@ function editPost(postID, creatorID){
             creatorID,
         }),
     })
-    .then(() => {window.location.reload()});
+    .then((response) => {
+        if (response.status == 200){
+            window.location.reload();
+        } else {
+            response.text()
+            .then((data) => {
+                alert(data);
+            })
+        }
+    })
 }
 
 function deletePost(postID) {
@@ -26,5 +35,14 @@ function deletePost(postID) {
             postID,
         }),
     })
-    .then(() => {window.location.reload()});
+    .then((response) => {
+        if (response.status == 200){
+            window.location.reload();
+        } else {
+            response.text()
+            .then((data) => {
+                alert(data);
+            })
+        }
+    })
 }

@@ -17,7 +17,14 @@ loginForm.addEventListener('submit', (e) => {
             content
         }),
     })
-    .then(() => {
-        console.log('Post added');
+    .then((response) => {
+        if (response.status == 200){
+            window.location.href = '/';
+        } else {
+            response.text()
+            .then((data) => {
+                alert(data);
+            })
+        }
     })
 })

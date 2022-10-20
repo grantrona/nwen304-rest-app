@@ -20,6 +20,11 @@ loginForm.addEventListener('submit', (e) => {
     .then((response) => {
         if (response.status == 200){
             window.location.href = '/';
+        } else {
+            response.text()
+            .then((data) => {
+                alert(data);
+            })
         }
     })
 })

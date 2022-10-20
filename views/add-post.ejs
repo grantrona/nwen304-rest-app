@@ -7,22 +7,22 @@
 
     <body style="background-color: #222831; padding-top: 51px;">
         <div class="container">
-        <header>
-            <%- include('partials/navbar', {isAuth: isAuth}); %>
-        </header>
-        <main>
-            <h1 style="color: #EEEEEE">Add Post</h1>
-            <form id="addPostForm" class="container" style="background-color: #EEEEEE; border-radius: 10px;  padding: 20px; border-radius: 10px;">
-                <label for="postTitle">Enter Title</label>
-                <input type="text" id="pTitle">
+            <header>
+                <%- include('partials/navbar', {isAuth: isAuth}); %>
+            </header>
+            <main>
+                <h1 style="color: #EEEEEE">Add Post</h1>
+                <form id="addPostForm" class="container" style="background-color: #EEEEEE; border-radius: 10px;  padding: 20px; border-radius: 10px;">
+                    <label for="postTitle">Enter Title</label>
+                    <input type="text" id="pTitle">
 
-                <label for="postContent">Enter Post</label>
-                <input type="text" id="pContent">
+                    <label for="postContent">Enter Post</label>
+                    <input type="text" id="pContent">
 
-                <button type="submit" class="btn-primary" style="border-radius: 10px;">Add Post</button>
-            </form>
-        </main>
-    </div>
-        <script src="./page-scripts/add-post.js"></script>
+                    <button type="submit" class="btn-primary" style="border-radius: 10px;">Add Post</button>
+                </form>
+            </main>
+        </div>
+        <script src="../page-scripts/add-post.js"></script>
     </body>
 </html>

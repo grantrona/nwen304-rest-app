@@ -46,7 +46,7 @@ router.get('/reset-password', (req, res) => {
 });
 
 // Navigate to add post html file
-router.get('/addPost', (req, res) =>{
+router.get('/protected/addPostPage', (req, res) =>{
     res.render('add-post', {isAuth: req.cookies['session']? true: false})
 });
 
