@@ -18,7 +18,7 @@ router.use('/signup', (req, res) => {
 router.get('/reset-password/:id/:token', (req, res) => {
     const { id, token } = req.params;
     if(isValidToken(id, token)){
-        res.render('password-reset/update-password', {isAuth: false});
+        res.render('password-reset/update-password', {isAuth: false, id: id});
     }else{
         res.sendStatus(401);
     }

@@ -121,24 +121,41 @@ function isValidToken(id, token){
  * @param {string} name New name to update to.
  * @param {string} email New email to update to.
  * @param {string} password New password to update to
- * @param {string} token New token to update to.
  * @returns A Promise<void>, which resolves once doc us successfully updated.
  */
-function updateUser(id, name, email, password, token){
+function updateUser(id, name, email, password){
   const updatedUser = {
     displayName: name,
     email: email,
     password: password,
-    secretToken: token,
   };
 
   return setDoc(doc(db, "users", id), updatedUser);
 }
 
-
+/**
+ * Updates the password of the specified user to newPassword.
+ * 
+ * Uses the updateUser method to change the password, which updates all fields.
+ * 
+ * @param {string} id ID of the user to change.
+ * @param {string} newPassword The new password to update to.
+ */
 function updatePassword(id, newPassword){
-  // const encryptedPassword = sha256(newPassword);
-  console.log("id: ", id, " Pass:", newPassword);
+  const encryptedPassword = sha256(newPassword);
+  getUserByID(id).then((oldUserDoc) => {
+    const oldUser = oldUserDoc.data();
+    console.log("Old user: ", oldUser);
+    updateUser(id, oldUser.displayName, oldUser.email, encryptedPassword)
+    .then(() => {
+      getUserByID(id)
+      .then((newUserDoc) => {
+        console.log("New User: ", newUserDoc.data());
+      });
+    });
+  });
+  
+  
 }
 
 module.exports = { 

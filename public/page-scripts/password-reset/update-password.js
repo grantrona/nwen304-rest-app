@@ -1,5 +1,3 @@
-// test
-
 const loginForm = document.getElementById('resetForm');
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -16,14 +14,13 @@ loginForm.addEventListener('submit', (e) => {
         return;
     }
 
-    
-
     fetch("/reset-password/submit", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+            userID,
             password,
         }),
     })
