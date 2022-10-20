@@ -40,7 +40,7 @@ router.get('/protected/myposts', (req, res) => {
 });
 
 router.get('/protected/profile', (req, res) => {
-    const user = {id: 2, name: "Todd Howard"}; // temp fake user
+    const user = jwt.decode(req.cookies['session'], secret_key)
 
     res.render('profile', {isAuth: true, user: user});
 });
