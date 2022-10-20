@@ -1,4 +1,4 @@
-// const mailer = require('nodemailer');
+const mailer = require('nodemailer');
 
 /**
  * Sends an email to the given email address with the given details.
@@ -8,19 +8,17 @@
  * @param {string} text Email content
  */
 function sendEmail(email, subject, text){
-    const transporter = nodemailer.createTransport({
-        host: "localhost",
-        service: "gmail",
-        port: 587,
-        secure: false,
+    const transporter = mailer.createTransport({
+        service: "Gmail",
         auth: {
-            user: "john",
-            pass: "snow"
+            user: "nwen304.chirper@gmail.com",
+            pass: "pxkylysimwldwlri"
         },
     });
 
+    console.log("Transporter done");
     transporter.sendMail({
-        from: "chirper Support",
+        from: "nwen304.chirper@gmail.com",
         to: email,
         subject: subject,
         text: text,
@@ -30,3 +28,5 @@ function sendEmail(email, subject, text){
         console.log(err);
     });
 }
+
+module.exports = { sendEmail };

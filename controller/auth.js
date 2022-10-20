@@ -11,6 +11,7 @@ const {
 } = require('firebase/firestore');
 const { sha256 } = require('js-sha256');
 const jwt = require('jsonwebtoken');
+const { sendEmail } = require('./mail');
 
 /**
  * Returns doc for the user specified by the given email.
@@ -91,6 +92,8 @@ function sendPasswordResetEmail(email){
       const link = `http://localhost:3000/reset-password/${doc.id}/${token}`;
       console.log(link);
 
+      const subject = "NWEN304 Chirper: password reset";
+      sendEmail(email, subject, link);
     });
 }
 
