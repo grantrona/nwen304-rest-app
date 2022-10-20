@@ -136,9 +136,9 @@ function updateUser(id, name, email, password, token){
 }
 
 
-function updatePassword(newPassword){
-  const encryptedPassword = sha256(newPassword);
-  
+function updatePassword(id, newPassword){
+  // const encryptedPassword = sha256(newPassword);
+  console.log("id: ", id, " Pass:", newPassword);
 }
 
 module.exports = { 

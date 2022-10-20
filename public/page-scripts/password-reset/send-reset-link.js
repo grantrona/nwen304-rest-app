@@ -7,7 +7,7 @@ loginForm.addEventListener('submit', (e) => {
         return;
     }
 
-    fetch("/reset-password/submit", {
+    fetch("/reset-password/send", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ router.use('/signup', (req, res) => {
 router.get('/reset-password/:id/:token', (req, res) => {
     const { id, token } = req.params;
     if(isValidToken(id, token)){
-        res.render('password-reset/update-password', {isAuth: false, id: id});
+        res.render('password-reset/update-password', {isAuth: false});
     }else{
         res.sendStatus(401);
     }
@@ -37,7 +37,7 @@ router.post('/reset-password/send', (req, res) => {
 
 router.post('/reset-password/submit', (req, res) => {
     // change password.
-    updatePassword(req.body.password);
+    updatePassword(req.body.userID, req.body.password);
     res.sendStatus(200);
 });
 

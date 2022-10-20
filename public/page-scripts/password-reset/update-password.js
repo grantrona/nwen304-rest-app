@@ -1,10 +1,10 @@
+// test
+
 const loginForm = document.getElementById('resetForm');
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const password = document
-        .getElementById('newPasswordInput').value;
-    const passwordConfirm = document
-        .getElementById('newPasswordInputConfirm').value;
+    const password = document.getElementById('newPasswordInput').value;
+    const passwordConfirm = document.getElementById('newPasswordInputConfirm').value;
 
     if (password.trim() === '' || passwordConfirm.trim() === '') {
         alert('Fill in all the fields');
@@ -15,6 +15,8 @@ loginForm.addEventListener('submit', (e) => {
         alert('Passwords do not match');
         return;
     }
+
+    
 
     fetch("/reset-password/submit", {
         method: 'POST',
