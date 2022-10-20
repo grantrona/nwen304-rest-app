@@ -26,6 +26,7 @@ loginForm.addEventListener('submit', (e) => {
     })
     .then((response) => {
         if (response.status == 200){
+            alert("Password successfully updated");
             window.location.href = '/';
         }
     })

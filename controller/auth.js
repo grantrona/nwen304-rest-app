@@ -93,7 +93,8 @@ function sendPasswordResetEmail(email){
       console.log(link);
 
       const subject = "NWEN304 Chirper: password reset";
-      sendEmail(email, subject, link);
+      const content = `Click the following link to reset your Chirper password:\n${link}`;
+      sendEmail(email, subject, content);
     });
 }
 

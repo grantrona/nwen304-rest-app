@@ -18,6 +18,7 @@ loginForm.addEventListener('submit', (e) => {
     })
     .then((response) => {
         if (response.status == 200){
+            alert("Check your email address for password reset link");
             window.location.href = '/';
         }
     })
