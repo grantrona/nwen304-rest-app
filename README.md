@@ -21,10 +21,27 @@ Users can login with email and password or with their Google account.
 Users are timed out after 3 minutes of inactivity (challenge requirement).
 
 # How to use REST API
-The REST API has two options, and is built into the server for the app but using a completely separate route.
- Reading, involves no authentication and reads a certain number of recent posts. 
-Writing involves supplying a username and password, and allows users to write a post tied to their account. 
+The REST API has two options, and is built into the server for the app but using a completely separate route. Reading, involves no authentication and reads a certain number of recent posts. Writing involves supplying a username and password, and allows users to write a post tied to their account. 
+
+The web service can be accessed from the `/service` endpoint. 
+
+A GET request to this endpoint will return the latest posts in JSON format. It takes an optional 'count' query that defines how many posts to retrieve (eg. `/service?count=10`), though will default to 5 if not specified.
+
+A POST request to this endpoint will add an aditional post, with specified title and content. The POST request requires an `email`, `password`, `title` and `content` parameters in the request body. The email and password are used to verify the request by logging in.
 
 
 # Error Handling
-Errors are caught in the server, and are sent back in the response to the client. This is for both the web app and the REST api. This generally also prevents the server from ever crashing. 
+Errors are caught in the server, and are sent back in the response to the client. This is for both the web app and the REST api. This generally also prevents the server from ever crashing.
+
+## Web service error handling
+
+Error handling is generally handled by sending appropriate error codes in responses. These are usually triggered by catch clauses in promise chains.
+
+### GET Requests
+- If the `count` query parameter is missing, a reasonable default of 5 is used instead.
+- If any other error occurs when retrieving the posts from the database, a response is sent to the client with error code 500 (Internal Server Error).
+  - These types of errors are unlikely to occur, as the database is just being queried for it's latest posts entries.
+
+### POST Requests
+- If **any** of the required body parameters are missing, a 400 error code will be returned. as all of these paramters are needed.
+- The serviceLogin function is used to verify the email and password, this is a promise which will return null if verification failed, a check for both null and undefined is used to catch unauthorised credentials, and a 401 error is sent in response.
