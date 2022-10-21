@@ -32,7 +32,8 @@ router.get('/service', (req, res) => {
  */
 router.post('/service', (req, res) => {
     // body should contain email, password, title and content
-    if(req.body.email == undefined || req.body.password == undefined){
+    if(req.body.email === undefined || req.body.password === undefined
+        || req.body.title === undefined || req.body.content === undefined){
         res.sendStatus(400);
         return;
     }

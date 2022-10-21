@@ -81,7 +81,8 @@ function serviceLogin(email, password){
 function sendPasswordResetEmail(email){
   return getUserByEmail(email)
     .then((doc) => {
-      if(doc === null) return null;
+      if(doc === null) return false; // user doesnt exist
+      if(doc.get('password') === null) return false; // google account
       const user = doc.data();
       const secret = secret_key + doc.password;
       const token = jwt.sign(
@@ -95,6 +96,8 @@ function sendPasswordResetEmail(email){
       const subject = "NWEN304 Chirper: password reset";
       const content = `Click the following link to reset your Chirper password:\n${link}`;
       sendEmail(email, subject, content);
+      
+      return true;
     });
 }
 

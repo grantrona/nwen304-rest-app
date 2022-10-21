@@ -27,8 +27,13 @@ router.get('/reset-password/:id/:token', (req, res) => {
 
 router.post('/reset-password/send', (req, res) => {
     sendPasswordResetEmail(req.body.email)
-        .then(() => {
-            res.sendStatus(200);
+        .then((isSuccessful) => {
+            if(isSuccessful){
+                res.sendStatus(200); // user found and email sent
+            }else{
+                res.sendStatus(400); // user not found
+            }
+            
         })
         .catch((err) => {
             res.sendStatus(500);
