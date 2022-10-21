@@ -10,6 +10,7 @@ const {
     doc, 
     limit 
 } = require('firebase/firestore');
+const moment = require('moment');
 
 /**
  * Adds the given post to the database.
@@ -36,6 +37,7 @@ function getPosts(count){
             postsSnapshot.forEach(postDoc => {
                 posts.push({...postDoc.data(), id: postDoc.id});
             });
+            const timeStampFormat = 'MM/DD/YY hh:mm:ss A';
             posts.sort((a, b) => {
                 const aMoment = new moment(a.date, timeStampFormat);
                 const bMoment = new moment(b.date, timeStampFormat);
@@ -72,6 +74,7 @@ function getPosts(count){
         postsSnapshot.forEach(postDoc => {
             posts.push({...postDoc.data(), id: postDoc.id});
         });
+        const timeStampFormat = 'MM/DD/YY hh:mm:ss A';
         posts.sort((a, b) => {
             const aMoment = new moment(a.date, timeStampFormat);
             const bMoment = new moment(b.date, timeStampFormat);
