@@ -124,7 +124,7 @@ authRoutes.post('/signup/email',(req,res) => {
   let password = req.body.password;
   let passwordResp = checkPassword(password);
   if (passwordResp != "") {
-    res.status(error).send(passwordResp);
+    res.status(400).send(passwordResp);
     return;
   }
   getDocs(query(collection(db,'users'), where("email","==",req.body.email)))
