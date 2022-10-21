@@ -20,6 +20,9 @@ router.get('/service', (req, res) => {
             res
                 .status(200)
                 .json(posts)
+        })
+        .catch((err) => {
+            res.sendStatus(500); // issue with collecting posts.
         });
 });
 

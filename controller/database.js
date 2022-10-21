@@ -44,11 +44,7 @@ function getPosts(count){
                 return bMoment.diff(aMoment);
             });
             return posts;
-        })
-        .catch((err)=> {
-            console.log(err);
-            return [];
-        })
+        });
 }
 
 /**
