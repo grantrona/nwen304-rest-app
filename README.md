@@ -33,9 +33,12 @@ A POST request to this endpoint will add an aditional post, with specified title
 # Error Handling
 Errors are caught in the server, and are sent back in the response to the client. This is for both the web app and the REST api. This generally also prevents the server from ever crashing.
 
-## Web service error handling
+## Web app error handling
+Errors are displayed to the user by alerts. Public controller files handle client side requests for events such as logging in, registering, adding posts. Should an error occur during a request, the server will send an appropriate error code. 
 
+## Web service error handling
 Error handling is generally handled by sending appropriate error codes in responses. These are usually triggered by catch clauses in promise chains.
+Client side javascript checks the status code of the response. If it is ok, it proceeds as intended. If not, a window alert with the server's given message is displayed in the user's browser. All server errors are sent as regular text.
 
 ### GET Requests
 - If the `count` query parameter is missing, a reasonable default of 5 is used instead.
