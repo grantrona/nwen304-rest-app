@@ -27,4 +27,9 @@ const server = http.createServer(app);
 const PORT = process.env.port || 3000;
 server.listen(PORT);
 
+function closeServer () {
+    server.close;
+}
+
 module.exports = server;
+module.exports.stop = closeServer;

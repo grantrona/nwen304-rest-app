@@ -1,7 +1,7 @@
 const chai = require('chai');
+const expect = chai.expect;
 const chaiHttp = require('chai-http');
 const server = require('../index');
-const assert = chai.assert;
 
 chai.use(chaiHttp)
 
@@ -9,17 +9,29 @@ const testEmail = "authtesting@test.com";
 const testDisplayName = "auth_testing";
 const testPassword = "Qwerty123456@"
 
-describe("Testing authorization for authenticated user", () => {
+after(async () => {
+    require('../index').stop();
+});
 
+describe("Testing authorization for authenticated user", () => {
     it('Sucessful /GET home screen for unauthenticated user', (done) => {
         chai.request(server)
             .post('/')
             .end((err, res) => {
-                assert.equal(res.status, 200);
+                expect(res.status).to.equal(200);
+                expect(res.body).to.be.a('object');
                 done();
             })
 
-    })
+    });
+
+    it('Sucessful /POST login information', (done) => {
+        chai.request(server)
+            .post('/')
+            .end((err, res) => {
+                done();
+            })
+    });
 })
 
 
