@@ -17,9 +17,10 @@
 |Authenticated user on **My Post** page, changes title, content of post and clicks **Submit Edit**.|Page refreshes and title and content of post is updated.|
 |Authenticated user on **My Post** page, deletes post.|Page refreshes and post no longer displays.|
 |Authenticated user on **Profile** page.|Displays display name and link to change password.|
-|Authenticated user on **Profile** page and clicks change password, providing email address.|Alerts user to check email for password reset link, regardless of email is valid or not.|
+|Authenticated user on **Profile** page and clicks change password, providing valid email address.|Alerts user to check email for password reset link.|
+|User on **Profile** page and clicks change password, providing email address not associated with an account.|Alerts user to check email for password reset link.|
 |User enters new password with provided link.|User can now use new password to login to their account.|
-
+|User tries to enter new password with provided link for a Google account.|User alerted that event cannot occur.|
 ## Test Cases (Web Application)
 
 ## Test Scripts (Web Service)
