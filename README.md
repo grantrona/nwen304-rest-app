@@ -6,14 +6,18 @@
 - Jeff
 
 
-
 A CRUD web-app project for NWEN304 
 
 ### Required Steps for Installation
 - Install the Firebase CLI via npm by running the following command: <br> <i>npm install -g firebase-tools</i>
 
+## Link to our Web Application hosted on the Cloud
+https://chriper-webapp-atel43p7da-uc.a.run.app
+
 
 # How to use web app
+The Web Application is hosted on Google Cloud and can be accessed through this link: 
+- https://chriper-webapp-atel43p7da-uc.a.run.app
 The purpose of the web app is to make, edit and delete posts, as well as viewing other's. 
 Non-authenticated members can view any post and any user, but cannot edit posts.
 Authenticated members can edit, delete and create posts for themselves.
