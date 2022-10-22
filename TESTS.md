@@ -18,7 +18,7 @@
 |Authenticated user on **My Post** page, deletes post.|Page refreshes and post no longer displays.|
 |Authenticated user on **Profile** page.|Displays display name and link to change password.|
 |Authenticated user on **Profile** page and clicks change password, providing valid email address.|Alerts user to check email for password reset link.|
-|User on **Profile** page and clicks change password, providing email address not associated with an account.|Alerts user to check email for password reset link.|
+|User on **Profile** page and clicks change password, providing email address not associated with an account.|Alerts that event cannot occur.|
 |User enters new password with provided link.|User can now use new password to login to their account.|
 |User tries to enter new password with provided link for a Google account.|User alerted that event cannot occur.|
 ## Test Cases (Web Application)
