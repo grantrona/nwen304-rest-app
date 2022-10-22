@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { db, secret_key } = require('../utils/firebaseConfig');
 const { 
   collection, 
@@ -90,7 +92,7 @@ function sendPasswordResetEmail(email){
         secret, 
         {expiresIn: 300} // 5 minutes
       ); 
-      const link = `https://chriper-webapp-atel43p7da-uc.a.run.app/reset-password/${doc.id}/${token}`;
+      const link = `${process.env.URL}${doc.id}/${token}`;
       console.log(link);
 
       const subject = "NWEN304 Chirper: password reset";

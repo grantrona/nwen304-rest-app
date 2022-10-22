@@ -1,11 +1,14 @@
+require("dotenv").config();
+
 const secret_key = process.env.SECRET_KEY || 'secret_key';
 const secret_message = process.env.SECRET_MESSAGE || 'secret_message';
 const { initializeApp } = require('firebase/app');
 const { getFirestore } = require('firebase/firestore');
 const { getAuth } = require('firebase/auth');
 /*----------------------------------- Firebase config ------------------------------------------*/
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBx5tthRrnsBWbmEKdpDOqao-oTZAa851w",
+  apiKey: process.env.API_KEY,
   authDomain: "nwen304-rest-app.firebaseapp.com",
   projectId: "nwen304-rest-app",
   storageBucket: "nwen304-rest-app.appspot.com",
