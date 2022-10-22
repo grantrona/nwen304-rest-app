@@ -18,6 +18,7 @@ function checkToken(req, res, next) {
   let cookie = req.cookies['session'] || '';
   jwt.verify(cookie, secret_key, (err, data)=>{
     if (err) {
+      res.status(401);
       res.render('error',{message: "Credentials expired or incorrect, please login again"});
     }
     else {
