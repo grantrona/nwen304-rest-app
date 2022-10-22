@@ -20,6 +20,8 @@ loginForm.addEventListener('submit', (e) => {
         if (response.status == 200){
             alert("Check your email address for password reset link");
             window.location.href = '/';
+        }else{
+            alert("Failure sending password reset link, either no user with this email exists, or this email is associated with a google account. Please reset google account passwords through google.");
         }
     })
 })
