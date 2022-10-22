@@ -90,7 +90,7 @@ function sendPasswordResetEmail(email){
         secret, 
         {expiresIn: 300} // 5 minutes
       ); 
-      const link = `http://localhost:3000/reset-password/${doc.id}/${token}`;
+      const link = `https://chriper-webapp-atel43p7da-uc.a.run.app/reset-password/${doc.id}/${token}`;
       console.log(link);
 
       const subject = "NWEN304 Chirper: password reset";
@@ -114,6 +114,7 @@ function isValidToken(id, token){
 
   const secret = secret_key + user.password;
   try {
+    // verify will through error if failed
     const verify = jwt.verify(token, secret);
     return true;
   }catch (err){

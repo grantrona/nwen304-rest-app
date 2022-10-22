@@ -25,16 +25,16 @@
 ## Test Scripts (Web Service)
 
 The following links can be used in the browser, alternatively they can be used in curl or postman, The important factor is that 'count' is used as a query parameter:
-- `http://localhost:3000/service?count=10`
+- `https://chriper-webapp-atel43p7da-uc.a.run.app/service?count=10`
   - Testing GET request with specified count
-- `http://localhost:3000/service?count=1`
+- `https://chriper-webapp-atel43p7da-uc.a.run.app/service?count=1`
   - Testing GET request with different count
-- `http://localhost:3000/service`
+- `https://chriper-webapp-atel43p7da-uc.a.run.app/service`
   - Testing GET request with no count (defaults to 5)
 
 The following tests were done using postman, but converted to CURL commands:
 
-`curl --location --request POST 'http://localhost:3000/service' \
+`curl --location --request POST 'https://chriper-webapp-atel43p7da-uc.a.run.app/service' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email": "john@test.com",
@@ -44,7 +44,7 @@ The following tests were done using postman, but converted to CURL commands:
 }'`
 
 
-`curl --location --request POST 'http://localhost:3000/service' \
+`curl --location --request POST 'https://chriper-webapp-atel43p7da-uc.a.run.app/service' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     // "email": "john@test.com",
@@ -54,7 +54,7 @@ The following tests were done using postman, but converted to CURL commands:
 }'`
 
 
-`curl --location --request POST 'http://localhost:3000/service' \
+`curl --location --request POST 'https://chriper-webapp-atel43p7da-uc.a.run.app/service' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email": "john@test.com",
@@ -64,7 +64,7 @@ The following tests were done using postman, but converted to CURL commands:
 }'`
 
 
-`curl --location --request POST 'http://localhost:3000/service' \
+`curl --location --request POST 'https://chriper-webapp-atel43p7da-uc.a.run.app/service' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email": "john@test.com",
@@ -74,7 +74,7 @@ The following tests were done using postman, but converted to CURL commands:
 }'`
 
 
-`curl --location --request POST 'http://localhost:3000/service' \
+`curl --location --request POST 'https://chriper-webapp-atel43p7da-uc.a.run.app/service' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email": "john@test.com",
