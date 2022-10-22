@@ -58,7 +58,7 @@ describe("Testing authorization for authenticated user", () => {
                 expect(res).to.have.cookie('session');
                 // get gernerated cookie from header
                 const cookie = res.header['set-cookie'][0];
-                
+
                 // Test accessing add-post page with correct cookie header
                 chai.request(server)
                     .get('/protected/addPostPage')
@@ -121,7 +121,7 @@ describe("Testing authorization for authenticated user", () => {
                     })
             });
     });
-    
+
 })
 
 
@@ -207,12 +207,12 @@ describe("Testing authorization for unauthenticated user", () => {
                 expect(res.text).to.equal('OK')
                 expect(res).to.have.cookie('session');
                 const cookie = "incorrect-cookie value"
-                
+
                 // Test accessing add-post page with malformed cookie
                 chai.request(server)
                     .get('/protected/addPostPage')
                     .set('Cookie', cookie)
-                    .end((err, res) => {   
+                    .end((err, res) => {
                         expect(res.status).to.equal(401);
                         // Expect for a html page to be returned
                         expect(res.header['content-type']).to.equal('text/html; charset=utf-8')
@@ -220,4 +220,34 @@ describe("Testing authorization for unauthenticated user", () => {
                     })
             });
     });
+
+    it('User Signs out and cannot access protected paths again', (done) => {
+        chai.request(server)
+            .post('/login/email')
+            .send(loginInfo)
+            .set('content-type', 'application/json')
+            .end((err, res) => {
+                expect(res.status).to.equal(200);
+                expect(res.text).to.equal('OK')
+                expect(res).to.have.cookie('session');
+
+                // Sign our of session
+                chai.request(server)
+                    .get('/signout')
+                    .end((err, res) => {
+                        expect(res.status).to.equal(200);
+                        expect(res).to.not.have.cookie('session');
+
+                        // Test accessing add-post page after sign out
+                        chai.request(server)
+                            .get('/protected/addPostPage')
+                            .end((err, res) => {
+                                expect(res.status).to.equal(401);
+                                // Expect for a html page to be returned
+                                expect(res.header['content-type']).to.equal('text/html; charset=utf-8')
+                                done();
+                            })
+                    })
+            });
+    })
 })
