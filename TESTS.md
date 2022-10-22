@@ -84,4 +84,18 @@ The following tests were done using postman, but converted to CURL commands:
     //"content": "The variation being the difference between where the missile is, and where it wasn'\''t. If variation is considered to be a significant factor, it too, may be corrected by the GEA"
 }'`
 
+## Performance Test Results for Homepage 
+Stress tests conducted through <strong>k6.io</strong> accessing the web-applications homepage (https://chriper-webapp-atel43p7da-uc.a.run.app/):
+- <strong>Light load performance (~5 concurrent users, ~5 Reqests per second)</strong>
+  - Avg Response Time: 101 ms (Average may be being affected by outliers)
+  - Failed request Rate: 0
+
+- <strong>load performance at ~20 concurrent users, ~20 Requests per second:</strong>
+  - Avg Response Time: 85ms
+  - Failed request Rate: 0
+
+- <strong>Load performance at ~50 concurrent users, ~55 Requests per second:</strong>
+  - Avg Response Time: 90ms
+  - Failed request Rate: 0
+
 
